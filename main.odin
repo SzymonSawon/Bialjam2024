@@ -16,9 +16,7 @@ main :: proc() {
 
 	world := World{}
 	init_world(&world)
-
-	fmt.printfln("%f", world)
-
+	defer deinit_world(&world)
 
 	for !rl.WindowShouldClose() {
 		dt := rl.GetFrameTime()

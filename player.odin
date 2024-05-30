@@ -13,7 +13,7 @@ Player :: struct {
 }
 
 init_player :: proc(p: ^Player) {
-	p.position = {0, 0, 0}
+	p.position = {0, 0, -3}
 	p.yaw = 0
 	p.pitch = rl.PI
 }

@@ -5,12 +5,15 @@ import "core:math"
 import rl "vendor:raylib"
 
 World :: struct {
+	assets:      Assets,
 	main_camera: rl.Camera3D,
 	player:      Player,
 	entities:    [dynamic]Entity,
 }
 
 init_world :: proc(w: ^World) {
+	init_assets(&w.assets)
+
 	w.main_camera = rl.Camera3D {
 		up         = {0, 1, 0},
 		position   = {0, 1, 0},
@@ -24,6 +27,10 @@ init_world :: proc(w: ^World) {
 	}
 }
 
+deinit_world :: proc(w: ^World) {
+	deinit_assets(&w.assets)
+}
+
 update_world :: proc(w: ^World, dt: f32) {
 	update_player_movement(&w.player, dt)
 	update_main_camera(w)
@@ -31,6 +38,7 @@ update_world :: proc(w: ^World, dt: f32) {
 }
 
 draw_world :: proc(w: ^World, dt: f32) {
+	rl.DrawModel(w.assets.foodtruck_model, {0, 0, 0}, 1, rl.RAYWHITE)
 	when ODIN_DEBUG {
 		for &e in w.entities {
 			entity_draw_debug(&e)
