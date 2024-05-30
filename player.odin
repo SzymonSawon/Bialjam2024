@@ -7,15 +7,17 @@ import rl "vendor:raylib"
 SPEED :: 3
 
 Player :: struct {
-	position: rl.Vector3,
-	yaw:      f32,
-	pitch:    f32,
+	position:  rl.Vector3,
+	yaw:       f32,
+	pitch:     f32,
+	held_item: Item,
 }
 
 init_player :: proc(p: ^Player) {
 	p.position = {0, 0, -3}
 	p.yaw = 0
 	p.pitch = rl.PI
+	p.held_item = .SQUID_MEAT
 }
 
 player_get_forward :: proc(p: ^Player) -> rl.Vector3 {
@@ -29,8 +31,8 @@ player_get_forward :: proc(p: ^Player) -> rl.Vector3 {
 update_player_movement :: proc(p: ^Player, dt: f32) {
 	rotation := rl.GetMouseDelta()
 	rotation *= 0.01
-	p.pitch -= rotation.y
-	p.pitch = math.clamp(p.pitch, -rl.PI, rl.PI / 4)
+	p.pitch += rotation.y
+	p.pitch = math.clamp(p.pitch, 0.1, rl.PI - 0.1)
 	p.yaw += rotation.x
 
 	movement := rl.Vector3{0, 0, 0}
@@ -49,6 +51,10 @@ update_player_movement :: proc(p: ^Player, dt: f32) {
 	movement *= dt
 	movement *= SPEED
 
-	p.position += {movement.z * -math.cos(p.yaw), 0, movement.z * -math.sin(p.yaw)}
-	p.position += {movement.x * math.cos(p.yaw - rl.PI / 2), 0, movement.x * math.sin(p.yaw - rl.PI / 2)}
+	p.position += {movement.z * math.cos(p.yaw), 0, movement.z * math.sin(p.yaw)}
+	p.position += {
+		movement.x * math.cos(p.yaw + rl.PI / 2),
+		0,
+		movement.x * math.sin(p.yaw + rl.PI / 2),
+	}
 }

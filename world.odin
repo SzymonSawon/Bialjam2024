@@ -5,10 +5,14 @@ import "core:math"
 import rl "vendor:raylib"
 
 World :: struct {
-	assets:      Assets,
-	main_camera: rl.Camera3D,
-	player:      Player,
-	entities:    [dynamic]Entity,
+	assets:           Assets,
+	main_camera:      rl.Camera3D,
+	hud_camera:       rl.Camera3D,
+	last_screen_size: rl.Vector2,
+	world_layer:      rl.RenderTexture,
+	hud_layer:        rl.RenderTexture,
+	player:           Player,
+	entities:         [dynamic]Entity,
 }
 
 init_world :: proc(w: ^World) {
@@ -17,10 +21,20 @@ init_world :: proc(w: ^World) {
 	w.main_camera = rl.Camera3D {
 		up         = {0, 1, 0},
 		position   = {0, 1, 0},
-		target     = {0, 1, 0.5},
+		target     = {0, 1, 1},
 		fovy       = 80,
 		projection = .PERSPECTIVE,
 	}
+
+	w.hud_camera = rl.Camera3D {
+		up         = {0, 1, 0},
+		position   = {0, 0, 0},
+		target     = {0, 0, 1},
+		fovy       = 80,
+		projection = .PERSPECTIVE,
+	}
+
+	init_player(&w.player)
 
 	when ODIN_DEBUG {
 		append(&w.entities, make_entity_test())
@@ -38,11 +52,35 @@ update_world :: proc(w: ^World, dt: f32) {
 }
 
 draw_world :: proc(w: ^World, dt: f32) {
+	rl.BeginMode3D(w.main_camera)
+	defer rl.EndMode3D()
+
+	rl.ClearBackground(BACKGROUND)
+	rl.DrawGrid(10, 1)
+
 	rl.DrawModel(w.assets.foodtruck_model, {0, 0, 0}, 1, rl.RAYWHITE)
+
 	when ODIN_DEBUG {
 		for &e in w.entities {
 			entity_draw_debug(&e)
 		}
+	}
+}
+
+update_render_textures :: proc(w: ^World) {
+	screen_size := rl.Vector2{auto_cast rl.GetScreenWidth(), auto_cast rl.GetScreenHeight()}
+	if screen_size != w.last_screen_size {
+		w.last_screen_size = screen_size
+		rl.UnloadRenderTexture(w.world_layer)
+		rl.UnloadRenderTexture(w.hud_layer)
+		w.world_layer = rl.LoadRenderTexture(
+			auto_cast screen_size.x / PIXELIZE,
+			auto_cast screen_size.y / PIXELIZE,
+		)
+		w.hud_layer = rl.LoadRenderTexture(
+			auto_cast screen_size.x / PIXELIZE,
+			auto_cast screen_size.y / PIXELIZE,
+		)
 	}
 }
 

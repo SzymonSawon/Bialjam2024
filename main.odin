@@ -6,6 +6,7 @@ import rl "vendor:raylib"
 WIDTH :: 1600
 HEIGHT :: 900
 BACKGROUND :: rl.Color{0x18, 0x18, 0x18, 0xff}
+PIXELIZE :: 4
 
 main :: proc() {
 	rl.InitWindow(WIDTH, HEIGHT, "InterdimensionalFoodTruck")
@@ -25,15 +26,26 @@ main :: proc() {
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
 
+		update_render_textures(&world)
+
 		{
-			rl.BeginMode3D(world.main_camera)
-			defer rl.EndMode3D()
-
-			rl.ClearBackground(BACKGROUND)
-			rl.DrawGrid(10, 1)
-
+			rl.BeginTextureMode(world.world_layer)
+			defer rl.EndTextureMode()
 			draw_world(&world, dt)
 		}
+		{
+			rl.BeginTextureMode(world.hud_layer)
+			defer rl.EndTextureMode()
+			draw_3d_hud(&world, dt)
+		}
+
+		{
+			rl.BeginShaderMode(world.assets.postprocess_shader)
+			defer rl.EndShaderMode()
+			rl.DrawTextureEx(world.world_layer.texture, {0, 0}, 0, PIXELIZE, rl.WHITE)
+			rl.DrawTextureEx(world.hud_layer.texture, {0, 0}, 0, PIXELIZE, rl.WHITE)
+		}
+
 		when ODIN_DEBUG {
 			rl.DrawFPS(10, 10)
 		}
