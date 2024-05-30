@@ -52,7 +52,7 @@ init_world :: proc(w: ^World) {
 	w.recipe_layer = rl.LoadRenderTexture(RECIPE_LAYER_SIZE, RECIPE_LAYER_SIZE)
 	w.assets.plane_model.materials[1].maps[0].texture = w.recipe_layer.texture
 
-    w.current_recipe = make_recipe()
+	w.current_recipe = make_recipe()
 
 	rl.PlayMusicStream(w.assets.radio_music)
 }
@@ -91,7 +91,9 @@ draw_world :: proc(w: ^World, dt: f32) {
 	defer rl.EndMode3D()
 
 	rl.ClearBackground(BACKGROUND)
-	rl.DrawGrid(10, 1)
+	when ODIN_DEBUG {
+		rl.DrawGrid(10, 1)
+	}
 
 	rl.DrawModel(w.assets.foodtruck_model, {0, 0, 0}, 1, rl.WHITE)
 
