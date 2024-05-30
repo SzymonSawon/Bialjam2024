@@ -6,6 +6,9 @@ import rl "vendor:raylib"
 
 SPEED :: 3
 
+PLAYER_BOUNDS_MIN :: rl.Vector3{-1, 0, -0.5}
+PLAYER_BOUNDS_MAX :: rl.Vector3{0.7, 0, 0.4}
+
 Player :: struct {
 	position:              rl.Vector3,
 	yaw:                   f32,
@@ -63,4 +66,5 @@ update_player_movement :: proc(p: ^Player, dt: f32) {
 		0,
 		movement.x * math.sin(p.yaw + rl.PI / 2),
 	}
+    p.position = rl.Vector3Clamp(p.position, PLAYER_BOUNDS_MIN, PLAYER_BOUNDS_MAX)
 }
