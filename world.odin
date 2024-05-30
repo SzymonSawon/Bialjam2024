@@ -5,6 +5,7 @@ import "core:math"
 import rl "vendor:raylib"
 
 World :: struct {
+	now:              f32,
 	assets:           Assets,
 	main_camera:      rl.Camera3D,
 	hud_camera:       rl.Camera3D,
@@ -13,6 +14,7 @@ World :: struct {
 	hud_layer:        rl.RenderTexture,
 	player:           Player,
 	entities:         [dynamic]Entity,
+	targetted_entity: ^Entity,
 }
 
 init_world :: proc(w: ^World) {
@@ -36,6 +38,8 @@ init_world :: proc(w: ^World) {
 
 	init_player(&w.player)
 
+	append(&w.entities, make_entity_tentacle())
+
 	when ODIN_DEBUG {
 		append(&w.entities, make_entity_test())
 	}
@@ -43,12 +47,15 @@ init_world :: proc(w: ^World) {
 
 deinit_world :: proc(w: ^World) {
 	deinit_assets(&w.assets)
+	delete(w.entities)
 }
 
 update_world :: proc(w: ^World, dt: f32) {
+    w.now += dt
 	update_player_movement(&w.player, dt)
 	update_main_camera(w)
 	update_entity_targetting(w)
+	update_entity_interaction(w)
 }
 
 draw_world :: proc(w: ^World, dt: f32) {
@@ -59,6 +66,10 @@ draw_world :: proc(w: ^World, dt: f32) {
 	rl.DrawGrid(10, 1)
 
 	rl.DrawModel(w.assets.foodtruck_model, {0, 0, 0}, 1, rl.RAYWHITE)
+
+	for &e in w.entities {
+		draw_entity(w, &e)
+	}
 
 	when ODIN_DEBUG {
 		for &e in w.entities {
@@ -98,11 +109,23 @@ update_entity_targetting :: proc(w: ^World) {
 		position  = w.main_camera.position,
 		direction = player_get_forward(p),
 	}
+	w.targetted_entity = nil
+	closest_distance: f32 = 0
 	for &e in w.entities {
 		e.targeted = false
 		hit := rl.GetRayCollisionBox(ray, entity_get_bounds(&e))
 		if hit.hit {
 			e.targeted = true
+			if w.targetted_entity == nil || closest_distance > hit.distance {
+				w.targetted_entity = &e
+				closest_distance = hit.distance
+			}
 		}
+	}
+}
+
+update_entity_interaction :: proc(w: ^World) {
+	if (rl.IsMouseButtonPressed(.LEFT) && w.targetted_entity != nil) {
+		entity_interact(w, w.targetted_entity)
 	}
 }

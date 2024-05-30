@@ -9,6 +9,8 @@ Assets :: struct {
 	generic_diffuse_shader: rl.Shader,
 	hud_diffuse_shader: rl.Shader,
 	foodtruck_model:        rl.Model,
+	tentacle_model:        rl.Model,
+	portal_model:        rl.Model,
 	squid_meat_model:       rl.Model,
 }
 
@@ -26,6 +28,12 @@ init_assets :: proc(a: ^Assets) {
 	a.foodtruck_model = rl.LoadModel("res/models/foodtruck.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.foodtruck_model)
 
+	a.tentacle_model = rl.LoadModel("res/models/tentacle.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.tentacle_model)
+
+	a.portal_model = rl.LoadModel("res/models/portal.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.portal_model)
+
 	a.squid_meat_model = rl.LoadModel("res/models/squid_meat.glb")
 	assign_shader_to_model(a.hud_diffuse_shader, &a.squid_meat_model)
 }
@@ -35,5 +43,7 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadShader(a.hud_diffuse_shader)
 	rl.UnloadShader(a.generic_diffuse_shader)
 	rl.UnloadModel(a.foodtruck_model)
+	rl.UnloadModel(a.tentacle_model)
+	rl.UnloadModel(a.portal_model)
 	rl.UnloadModel(a.squid_meat_model)
 }
