@@ -62,6 +62,16 @@ update_world :: proc(w: ^World, dt: f32) {
 	update_entity_targetting(w)
 	update_entity_interaction(w)
 	update_music(w)
+	update_shaders(w)
+}
+
+update_shaders :: proc(w: ^World) {
+	rl.SetShaderValue(
+		w.assets.hori_wobble_diffuse_shader,
+		rl.GetShaderLocation(w.assets.hori_wobble_diffuse_shader, "time"),
+		&w.now,
+		.FLOAT,
+	)
 }
 
 update_music :: proc(w: ^World) {

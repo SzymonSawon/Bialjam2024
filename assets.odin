@@ -8,6 +8,7 @@ Assets :: struct {
 	postprocess_shader:     rl.Shader,
 	generic_diffuse_shader: rl.Shader,
 	hud_diffuse_shader:     rl.Shader,
+	hori_wobble_diffuse_shader: rl.Shader,
 	foodtruck_model:        rl.Model,
 	tentacle_model:         rl.Model,
 	portal_model:           rl.Model,
@@ -28,12 +29,13 @@ init_assets :: proc(a: ^Assets) {
 	a.postprocess_shader = rl.LoadShader(nil, "res/shaders/postprocess.glsl")
 	a.hud_diffuse_shader = rl.LoadShader("res/shaders/vertex.glsl", "res/shaders/diffuse_hud.glsl")
 	a.generic_diffuse_shader = rl.LoadShader("res/shaders/vertex.glsl", "res/shaders/diffuse.glsl")
+	a.hori_wobble_diffuse_shader = rl.LoadShader("res/shaders/vertex_wobble_horizontal.glsl", "res/shaders/diffuse.glsl")
 
 	a.foodtruck_model = rl.LoadModel("res/models/foodtruck.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.foodtruck_model)
 
 	a.tentacle_model = rl.LoadModel("res/models/tentacle.glb")
-	assign_shader_to_model(a.generic_diffuse_shader, &a.tentacle_model)
+	assign_shader_to_model(a.hori_wobble_diffuse_shader, &a.tentacle_model)
 
 	a.portal_model = rl.LoadModel("res/models/portal.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.portal_model)
