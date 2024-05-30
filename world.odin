@@ -43,6 +43,8 @@ init_world :: proc(w: ^World) {
 	when ODIN_DEBUG {
 		append(&w.entities, make_entity_test())
 	}
+
+	rl.PlayMusicStream(w.assets.radio_music)
 }
 
 deinit_world :: proc(w: ^World) {
@@ -51,11 +53,16 @@ deinit_world :: proc(w: ^World) {
 }
 
 update_world :: proc(w: ^World, dt: f32) {
-    w.now += dt
+	w.now += dt
 	update_player_movement(&w.player, dt)
 	update_main_camera(w)
 	update_entity_targetting(w)
 	update_entity_interaction(w)
+	update_music(w)
+}
+
+update_music :: proc(w: ^World) {
+	rl.UpdateMusicStream(w.assets.radio_music)
 }
 
 draw_world :: proc(w: ^World, dt: f32) {

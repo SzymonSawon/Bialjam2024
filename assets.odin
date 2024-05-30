@@ -7,11 +7,12 @@ import rl "vendor:raylib"
 Assets :: struct {
 	postprocess_shader:     rl.Shader,
 	generic_diffuse_shader: rl.Shader,
-	hud_diffuse_shader: rl.Shader,
+	hud_diffuse_shader:     rl.Shader,
 	foodtruck_model:        rl.Model,
-	tentacle_model:        rl.Model,
-	portal_model:        rl.Model,
+	tentacle_model:         rl.Model,
+	portal_model:           rl.Model,
 	squid_meat_model:       rl.Model,
+	radio_music:            rl.Music,
 }
 
 assign_shader_to_model :: proc(s: rl.Shader, m: ^rl.Model) {
@@ -36,6 +37,8 @@ init_assets :: proc(a: ^Assets) {
 
 	a.squid_meat_model = rl.LoadModel("res/models/squid_meat.glb")
 	assign_shader_to_model(a.hud_diffuse_shader, &a.squid_meat_model)
+
+    a.radio_music = rl.LoadMusicStream("res/radio/radio.mp3")
 }
 
 deinit_assets :: proc(a: ^Assets) {

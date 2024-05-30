@@ -12,6 +12,9 @@ main :: proc() {
 	rl.InitWindow(WIDTH, HEIGHT, "InterdimensionalFoodTruck")
 	defer rl.CloseWindow()
 
+    rl.InitAudioDevice()
+    defer rl.CloseAudioDevice()
+
 	rl.SetTargetFPS(120)
 	rl.DisableCursor()
 
