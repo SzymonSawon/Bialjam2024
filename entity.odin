@@ -55,7 +55,7 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 			w.assets.portal_model,
 			e.position + {0, 0.27, 0.0},
 			{1, 0, 0},
-			90,
+			0,
 			{1, 1, 1},
 			rl.WHITE,
 		)
@@ -63,7 +63,7 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 			w.assets.tentacle_model,
 			e.position + {0, 0.1, -0.1},
 			{1, 0, 0},
-			-90,
+			0,
 			{1, 1, 1},
 			rl.WHITE,
 		)
