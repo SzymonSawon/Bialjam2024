@@ -42,7 +42,7 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
     case .FRIDGE:
 		player_hold_item(&w.player, w, .UNICORN_BONES)
 	case .CONTRUCTION_SITE:
-		recipe_try_add_ingredient(&w.current_recipe, w.player.held_item)
+		recipe_try_add_ingredient(w, &w.current_recipe, w.player.held_item)
 		player_hold_item(&w.player, w, .NONE)
 	}
 }

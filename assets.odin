@@ -5,19 +5,21 @@ import "core:math"
 import rl "vendor:raylib"
 
 Assets :: struct {
-	postprocess_shader:     rl.Shader,
-	generic_diffuse_shader: rl.Shader,
-	hud_diffuse_shader:     rl.Shader,
+	postprocess_shader:         rl.Shader,
+	generic_diffuse_shader:     rl.Shader,
+	hud_diffuse_shader:         rl.Shader,
 	hori_wobble_diffuse_shader: rl.Shader,
-	foodtruck_model:        rl.Model,
-	tentacle_model:         rl.Model,
-	portal_model:           rl.Model,
-	squid_meat_model:       rl.Model,
-	slime_model:            rl.Model,
-	fridge_model:           rl.Model,
-	fridge_bones_model:     rl.Model,
+	foodtruck_model:            rl.Model,
+	tentacle_model:             rl.Model,
+	portal_model:               rl.Model,
+	squid_meat_model:           rl.Model,
+	slime_model:                rl.Model,
+	fridge_model:               rl.Model,
+	fridge_bones_model:         rl.Model,
 	plane_model:                rl.Model,
-	radio_music:            rl.Music,
+	radio_music:                rl.Music,
+	good_ingredient_sound:      rl.Sound,
+	bad_ingredient_sound:       rl.Sound,
 }
 
 assign_shader_to_model :: proc(s: rl.Shader, m: ^rl.Model) {
@@ -60,6 +62,9 @@ init_assets :: proc(a: ^Assets) {
 	assign_shader_to_model(a.generic_diffuse_shader, &a.plane_model)
 
 	a.radio_music = rl.LoadMusicStream("res/radio/radio.mp3")
+
+	a.good_ingredient_sound = rl.LoadSound("res/sounds/correct_ingridient.mp3")
+	a.bad_ingredient_sound = rl.LoadSound("res/sounds/bad_ingridient.mp3")
 }
 
 deinit_assets :: proc(a: ^Assets) {
@@ -73,4 +78,7 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadModel(a.slime_model)
 	rl.UnloadModel(a.fridge_model)
 	rl.UnloadModel(a.fridge_bones_model)
+    rl.UnloadMusicStream(a.radio_music)
+    rl.UnloadSound(a.good_ingredient_sound)
+    rl.UnloadSound(a.bad_ingredient_sound)
 }

@@ -58,15 +58,15 @@ draw_recipe_layer :: proc(w: ^World) {
 	}
 }
 
-recipe_try_add_ingredient :: proc(r: ^Recipe, it: Item) {
+recipe_try_add_ingredient :: proc(w: ^World, r: ^Recipe, it: Item) {
     for &i in r.ingredients[0:r.ingredients_count] {
         if i.item == it && !i.done {
             i.done = true 
-            // TODO: play good sound
+            rl.PlaySound(w.assets.good_ingredient_sound)
             return
         }
     }
-    // TODO: play sad sound
+    rl.PlaySound(w.assets.bad_ingredient_sound)
 }
 
 recipe_is_done :: proc(r: ^Recipe) -> bool {
