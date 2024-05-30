@@ -110,7 +110,7 @@ make_entity_slime :: proc() -> Entity {
 }
 
 make_entity_fridge :: proc() -> Entity {
-	return Entity{kind = .FRIDGE, position = {0.7, 1, -0.35}, size = {0.2, 0.8, 0.2}}
+	return Entity{kind = .FRIDGE, position = {0.7, 1, -0.35}, size = {1, 1, 1}}
 }
 
 make_entity_construction_site :: proc() -> Entity {
