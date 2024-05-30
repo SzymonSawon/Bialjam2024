@@ -61,7 +61,7 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 		)
 		rl.DrawModelEx(
 			w.assets.tentacle_model,
-			e.position + {0, 0.1, -0.1},
+			e.position + {0, 0.1, 0.05},
 			{1, 0, 0},
 			0,
 			{1, 1, 1},
