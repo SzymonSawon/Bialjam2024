@@ -7,6 +7,7 @@ import rl "vendor:raylib"
 World :: struct {
 	main_camera: rl.Camera3D,
 	player:      Player,
+	entities:    [dynamic]Entity,
 }
 
 init_world :: proc(w: ^World) {
@@ -17,17 +18,45 @@ init_world :: proc(w: ^World) {
 		fovy       = 80,
 		projection = .PERSPECTIVE,
 	}
+
+	when ODIN_DEBUG {
+		append(&w.entities, make_entity_test())
+	}
 }
 
 update_world :: proc(w: ^World, dt: f32) {
 	update_player_movement(&w.player, dt)
 	update_main_camera(w)
+	update_entity_targetting(w)
+}
+
+draw_world :: proc(w: ^World, dt: f32) {
+	when ODIN_DEBUG {
+		for &e in w.entities {
+			entity_draw_debug(&e)
+		}
+	}
 }
 
 update_main_camera :: proc(w: ^World) {
 	c := &w.main_camera
 	p := &w.player
-    
+
 	c.position = p.position + rl.Vector3{0, 1, 0}
 	c.target = c.position + player_get_forward(p)
+}
+
+update_entity_targetting :: proc(w: ^World) {
+	p := &w.player
+	ray := rl.Ray {
+		position  = w.main_camera.position,
+		direction = player_get_forward(p),
+	}
+	for &e in w.entities {
+		e.targeted = false
+		hit := rl.GetRayCollisionBox(ray, entity_get_bounds(&e))
+		if hit.hit {
+			e.targeted = true
+		}
+	}
 }
