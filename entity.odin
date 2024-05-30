@@ -9,6 +9,7 @@ EntityKind :: enum {
 	TENTACLE,
     SLIME,
     FRIDGE,
+	CONTRUCTION_SITE,
 }
 
 Entity :: struct {
@@ -39,6 +40,9 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 		player_hold_item(&w.player, w, .SQUID_MEAT)
     case .SLIME:
     case .FRIDGE:
+	case .CONTRUCTION_SITE:
+		recipe_try_add_ingredient(&w.current_recipe, w.player.held_item)
+		player_hold_item(&w.player, w, .NONE)
 	}
 }
 
@@ -89,6 +93,7 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 			{1, 1, 1},
 			rl.WHITE,
 		)
+	case .CONTRUCTION_SITE:
 	}
 }
 
@@ -106,4 +111,8 @@ make_entity_slime :: proc() -> Entity {
 
 make_entity_fridge :: proc() -> Entity {
 	return Entity{kind = .FRIDGE, position = {0.7, 1, -0.35}, size = {0.2, 0.8, 0.2}}
+}
+
+make_entity_construction_site :: proc() -> Entity {
+	return Entity{kind = .CONTRUCTION_SITE, position = {0, 0.6, 0.5}, size = {0.6, 0.2, 0.6}}
 }

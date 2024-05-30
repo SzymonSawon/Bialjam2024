@@ -12,10 +12,11 @@ World :: struct {
 	last_screen_size: rl.Vector2,
 	world_layer:      rl.RenderTexture,
 	hud_layer:        rl.RenderTexture,
+	recipe_layer:     rl.RenderTexture,
 	player:           Player,
 	entities:         [dynamic]Entity,
 	targetted_entity: ^Entity,
-    current_recipe: Recipe,
+	current_recipe:   Recipe,
 }
 
 init_world :: proc(w: ^World) {
@@ -42,16 +43,23 @@ init_world :: proc(w: ^World) {
 	append(&w.entities, make_entity_tentacle())
 	append(&w.entities, make_entity_slime())
 	append(&w.entities, make_entity_fridge())
+	append(&w.entities, make_entity_construction_site())
 
 	when ODIN_DEBUG {
 		append(&w.entities, make_entity_test())
 	}
+
+	w.recipe_layer = rl.LoadRenderTexture(RECIPE_LAYER_SIZE, RECIPE_LAYER_SIZE)
+	w.assets.plane_model.materials[1].maps[0].texture = w.recipe_layer.texture
+
+    w.current_recipe = make_recipe()
 
 	rl.PlayMusicStream(w.assets.radio_music)
 }
 
 deinit_world :: proc(w: ^World) {
 	deinit_assets(&w.assets)
+	rl.UnloadRenderTexture(w.recipe_layer)
 	delete(w.entities)
 }
 
@@ -85,7 +93,10 @@ draw_world :: proc(w: ^World, dt: f32) {
 	rl.ClearBackground(BACKGROUND)
 	rl.DrawGrid(10, 1)
 
-	rl.DrawModel(w.assets.foodtruck_model, {0, 0, 0}, 1, rl.RAYWHITE)
+	rl.DrawModel(w.assets.foodtruck_model, {0, 0, 0}, 1, rl.WHITE)
+
+	// TODO: move to kelner
+	rl.DrawModel(w.assets.plane_model, {0.8, 0.9, 0.9}, 1, rl.WHITE)
 
 	for &e in w.entities {
 		draw_entity(w, &e)

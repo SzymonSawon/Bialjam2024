@@ -32,6 +32,11 @@ main :: proc() {
 		update_render_textures(&world)
 
 		{
+			rl.BeginTextureMode(world.recipe_layer)
+			defer rl.EndTextureMode()
+			draw_recipe_layer(&world)
+		}
+		{
 			rl.BeginTextureMode(world.world_layer)
 			defer rl.EndTextureMode()
 			draw_world(&world, dt)

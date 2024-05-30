@@ -16,6 +16,7 @@ Assets :: struct {
 	slime_model:            rl.Model,
 	fridge_model:           rl.Model,
 	fridge_bones_model:     rl.Model,
+	plane_model:                rl.Model,
 	radio_music:            rl.Music,
 }
 
@@ -29,7 +30,10 @@ init_assets :: proc(a: ^Assets) {
 	a.postprocess_shader = rl.LoadShader(nil, "res/shaders/postprocess.glsl")
 	a.hud_diffuse_shader = rl.LoadShader("res/shaders/vertex.glsl", "res/shaders/diffuse_hud.glsl")
 	a.generic_diffuse_shader = rl.LoadShader("res/shaders/vertex.glsl", "res/shaders/diffuse.glsl")
-	a.hori_wobble_diffuse_shader = rl.LoadShader("res/shaders/vertex_wobble_horizontal.glsl", "res/shaders/diffuse.glsl")
+	a.hori_wobble_diffuse_shader = rl.LoadShader(
+		"res/shaders/vertex_wobble_horizontal.glsl",
+		"res/shaders/diffuse.glsl",
+	)
 
 	a.foodtruck_model = rl.LoadModel("res/models/foodtruck.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.foodtruck_model)
@@ -52,7 +56,10 @@ init_assets :: proc(a: ^Assets) {
 	a.fridge_bones_model = rl.LoadModel("res/models/fridge_bones.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.fridge_bones_model)
 
-    a.radio_music = rl.LoadMusicStream("res/radio/radio.mp3")
+	a.plane_model = rl.LoadModel("res/models/plane.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.plane_model)
+
+	a.radio_music = rl.LoadMusicStream("res/radio/radio.mp3")
 }
 
 deinit_assets :: proc(a: ^Assets) {
