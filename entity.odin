@@ -40,6 +40,7 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 		player_hold_item(&w.player, w, .SQUID_MEAT)
     case .SLIME:
     case .FRIDGE:
+		player_hold_item(&w.player, w, .UNICORN_BONES)
 	case .CONTRUCTION_SITE:
 		recipe_try_add_ingredient(&w.current_recipe, w.player.held_item)
 		player_hold_item(&w.player, w, .NONE)
@@ -78,7 +79,7 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
     case .FRIDGE:
 		rl.DrawModelEx(
 			w.assets.fridge_model,
-			e.position + {0.4, -0.7, 0.3},
+			e.position + {0.1, 0.1, 0},
 			{1, 0, 0},
 			0,
 			{1, 1, 1},
@@ -87,7 +88,7 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 
 		rl.DrawModelEx(
 			w.assets.fridge_bones_model,
-			e.position + {0.345, -0.5, -0.04},
+			e.position + {0,0,-0.1},
 			{1, 0, 0},
 			0,
 			{1, 1, 1},
@@ -110,7 +111,7 @@ make_entity_slime :: proc() -> Entity {
 }
 
 make_entity_fridge :: proc() -> Entity {
-	return Entity{kind = .FRIDGE, position = {0.7, 1, -0.35}, size = {1, 1, 1}}
+	return Entity{kind = .FRIDGE, position = {1.045, 0.5, -0.1}, size = {0.4, 0.2, 1}}
 }
 
 make_entity_construction_site :: proc() -> Entity {
