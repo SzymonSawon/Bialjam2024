@@ -15,6 +15,7 @@ World :: struct {
 	player:           Player,
 	entities:         [dynamic]Entity,
 	targetted_entity: ^Entity,
+    current_recipe: Recipe,
 }
 
 init_world :: proc(w: ^World) {
