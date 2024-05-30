@@ -21,10 +21,11 @@ main :: proc() {
 
 
 	for !rl.WindowShouldClose() {
+		dt := rl.GetFrameTime()
+		update_world(&world, dt)
+
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
-
-		update_world(&world, rl.GetFrameTime())
 
 		{
 			rl.BeginMode3D(world.main_camera)
@@ -32,7 +33,11 @@ main :: proc() {
 
 			rl.ClearBackground(BACKGROUND)
 			rl.DrawGrid(10, 1)
+
+			draw_world(&world, dt)
 		}
-		rl.DrawFPS(10, 10)
+		when ODIN_DEBUG {
+			rl.DrawFPS(10, 10)
+		}
 	}
 }

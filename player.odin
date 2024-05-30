@@ -15,7 +15,7 @@ Player :: struct {
 init_player :: proc(p: ^Player) {
 	p.position = {0, 0, 0}
 	p.yaw = 0
-	p.pitch = 0
+	p.pitch = rl.PI
 }
 
 player_get_forward :: proc(p: ^Player) -> rl.Vector3 {
