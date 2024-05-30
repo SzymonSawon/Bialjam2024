@@ -7,6 +7,8 @@ import rl "vendor:raylib"
 EntityKind :: enum {
 	TEST,
 	TENTACLE,
+    SLIME,
+    FRIDGE,
 }
 
 Entity :: struct {
@@ -35,6 +37,8 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 		fmt.println("Hello, there")
 	case .TENTACLE:
 		player_hold_item(&w.player, w, .SQUID_MEAT)
+    case .SLIME:
+    case .FRIDGE:
 	}
 }
 
@@ -58,6 +62,33 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 			{1, 1, 1},
 			rl.WHITE,
 		)
+    case .SLIME:
+		rl.DrawModelEx(
+			w.assets.slime_model,
+			e.position + {0, 0, 1.5},
+			{1, 0, 0},
+			0,
+			{1, 1, 1},
+			rl.WHITE,
+		)
+    case .FRIDGE:
+		rl.DrawModelEx(
+			w.assets.fridge_model,
+			e.position + {0.4, -0.7, 0.3},
+			{1, 0, 0},
+			0,
+			{1, 1, 1},
+			rl.WHITE,
+		)
+
+		rl.DrawModelEx(
+			w.assets.fridge_bones_model,
+			e.position + {0.345, -0.5, -0.04},
+			{1, 0, 0},
+			0,
+			{1, 1, 1},
+			rl.WHITE,
+		)
 	}
 }
 
@@ -67,4 +98,12 @@ make_entity_test :: proc() -> Entity {
 
 make_entity_tentacle :: proc() -> Entity {
 	return Entity{kind = .TENTACLE, position = {0.7, 1, -0.35}, size = {0.2, 0.8, 0.2}}
+}
+
+make_entity_slime :: proc() -> Entity {
+	return Entity{kind = .SLIME, position = {0.7, 1, -0.35}, size = {0.2, 0.8, 0.2}}
+}
+
+make_entity_fridge :: proc() -> Entity {
+	return Entity{kind = .FRIDGE, position = {0.7, 1, -0.35}, size = {0.2, 0.8, 0.2}}
 }

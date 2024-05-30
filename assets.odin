@@ -12,6 +12,9 @@ Assets :: struct {
 	tentacle_model:         rl.Model,
 	portal_model:           rl.Model,
 	squid_meat_model:       rl.Model,
+	slime_model:            rl.Model,
+	fridge_model:           rl.Model,
+	fridge_bones_model:     rl.Model,
 	radio_music:            rl.Music,
 }
 
@@ -38,6 +41,15 @@ init_assets :: proc(a: ^Assets) {
 	a.squid_meat_model = rl.LoadModel("res/models/squid_meat.glb")
 	assign_shader_to_model(a.hud_diffuse_shader, &a.squid_meat_model)
 
+	a.slime_model = rl.LoadModel("res/models/slime.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.slime_model)
+
+	a.fridge_model = rl.LoadModel("res/models/fridge.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.fridge_model)
+
+	a.fridge_bones_model = rl.LoadModel("res/models/fridge_bones.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.fridge_bones_model)
+
     a.radio_music = rl.LoadMusicStream("res/radio/radio.mp3")
 }
 
@@ -49,4 +61,7 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadModel(a.tentacle_model)
 	rl.UnloadModel(a.portal_model)
 	rl.UnloadModel(a.squid_meat_model)
+	rl.UnloadModel(a.slime_model)
+	rl.UnloadModel(a.fridge_model)
+	rl.UnloadModel(a.fridge_bones_model)
 }

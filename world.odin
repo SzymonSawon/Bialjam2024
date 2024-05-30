@@ -40,6 +40,8 @@ init_world :: proc(w: ^World) {
 	init_player(&w.player)
 
 	append(&w.entities, make_entity_tentacle())
+	append(&w.entities, make_entity_slime())
+	append(&w.entities, make_entity_fridge())
 
 	when ODIN_DEBUG {
 		append(&w.entities, make_entity_test())
