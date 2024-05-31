@@ -5,18 +5,20 @@ import "core:math"
 import rl "vendor:raylib"
 
 World :: struct {
-	now:              f32,
-	assets:           Assets,
-	main_camera:      rl.Camera3D,
-	hud_camera:       rl.Camera3D,
-	last_screen_size: rl.Vector2,
-	world_layer:      rl.RenderTexture,
-	hud_layer:        rl.RenderTexture,
-	recipe_layer:     rl.RenderTexture,
-	player:           Player,
-	entities:         [dynamic]Entity,
-	targetted_entity: ^Entity,
-	current_recipe:   Recipe,
+	now:                 f32,
+	assets:              Assets,
+	main_camera:         rl.Camera3D,
+	hud_camera:          rl.Camera3D,
+	last_screen_size:    rl.Vector2,
+	world_layer:         rl.RenderTexture,
+	hud_layer:           rl.RenderTexture,
+	recipe_layer:        rl.RenderTexture,
+	player:              Player,
+	entities:            [dynamic]Entity,
+	targetted_entity:    ^Entity,
+	current_recipe:      Recipe,
+	come_to_window_time: f32,
+	slime_has_awakened:  bool,
 }
 
 init_world :: proc(w: ^World) {
@@ -54,6 +56,8 @@ init_world :: proc(w: ^World) {
 
 	w.current_recipe = make_recipe()
 
+	w.come_to_window_time = w.now + 5
+
 	rl.PlayMusicStream(w.assets.radio_music)
 }
 
@@ -65,6 +69,10 @@ deinit_world :: proc(w: ^World) {
 
 update_world :: proc(w: ^World, dt: f32) {
 	w.now += dt
+	if w.come_to_window_time <= w.now && !w.slime_has_awakened {
+        w.slime_has_awakened = true
+        //TODO: add sound effect
+    }
 	update_player_movement(&w.player, dt)
 	update_main_camera(w)
 	update_entity_targetting(w)
@@ -112,12 +120,10 @@ draw_world :: proc(w: ^World, dt: f32) {
 
 	rl.DrawModel(w.assets.foodtruck_model, {0, 0, 0}, 1, rl.WHITE)
 
-	// TODO: move to kelner
-	rl.DrawModel(w.assets.plane_model, {0.8, 0.9, 0.9}, 1, rl.WHITE)
-
 	for &e in w.entities {
 		draw_entity(w, &e)
 	}
+
 
 	when ODIN_DEBUG {
 		for &e in w.entities {

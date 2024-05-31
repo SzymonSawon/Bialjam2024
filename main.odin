@@ -51,7 +51,9 @@ main :: proc() {
 			draw_3d_hud(&world, dt)
 		}
 
-		{
+
+
+        {
 			rl.BeginShaderMode(world.assets.postprocess_shader)
 			defer rl.EndShaderMode()
 			rl.DrawTextureEx(world.world_layer.texture, {0, 0}, 0, PIXELIZE, rl.WHITE)
