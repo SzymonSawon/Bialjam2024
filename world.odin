@@ -87,24 +87,19 @@ update_world :: proc(w: ^World, dt: f32) {
 		w.sk = .GAME_OVER
 		fmt.printfln("you lost")
 	}
-    if w.round_number > 0{
-        if w.come_to_window_time <= w.now && !w.slime_has_awakened {
-            w.slime_has_awakened = true
-            rl.PlaySound(w.assets.ding_sound)
-            w.round_number += 1
-            w.start_round_time = w.now
-        }
-        if recipe_is_done(&w.current_recipe) {
-            w.come_to_window_time = w.now + 5
-            w.slime_has_awakened = false
-            w.current_recipe = make_recipe(w)
-            w.max_round_time -= 1
-            w.score+= f32(w.current_recipe.ingredients_count) * (w.max_round_time - (w.now - w.start_round_time))
-            w.start_round_time = w.now
-        }
+    if w.come_to_window_time <= w.now && !w.slime_has_awakened {
+        w.slime_has_awakened = true
+        rl.PlaySound(w.assets.ding_sound)
+        w.round_number += 1
+        w.start_round_time = w.now
     }
     if recipe_is_done(&w.current_recipe) {
-        w.round_number += 1
+        w.come_to_window_time = w.now + 5
+        w.slime_has_awakened = false
+        w.current_recipe = make_recipe(w)
+        w.max_round_time -= 1
+        w.score += f32(w.current_recipe.ingredients_count) * (w.max_round_time - (w.now - w.start_round_time))
+        w.start_round_time = w.now
     }
 	update_player_movement(&w.player, dt)
 	update_main_camera(w)
