@@ -46,8 +46,16 @@ draw_3d_hud :: proc(w: ^World, dt: f32) {
 			rl.GREEN,
 		)
 	}
-
-	if !w.slime_has_awakened || w.sk == .GAME_OVER{
+    if w.round_number == 0{
+        rl.DrawText(
+            rl.TextFormat("Time left: %f", 9999999.9),
+            auto_cast (screen_size.x - 100),
+            auto_cast (screen_size.y - 20),
+            10,
+            rl.RED,
+        )
+    }
+	else if !w.slime_has_awakened || w.sk == .GAME_OVER{
         rl.DrawText(
             rl.TextFormat("Time left: %f", 0.0),
             auto_cast (screen_size.x - 100),
