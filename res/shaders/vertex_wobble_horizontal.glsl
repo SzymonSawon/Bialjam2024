@@ -21,7 +21,7 @@ void main()
     fragTexCoord = vertexTexCoord;
     fragColor = vertexColor;
     fragNormal = normalize((matNormal * vec4(vertexNormal, 1.0)).xyz);
-    vec3 wobble = vec3(cos(time + pos.y * 10), sin(time + pos.y * 10), 0) * 0.05;
+    vec3 wobble = vec3(cos(time + pos.y * 10), sin(time + pos.y * 6), sin(time + pos.y * 10)) * 0.05;
     gl_Position = mvp * vec4(vertexPosition + wobble, 1.0);
     fragWorldPosition = pos;
 }

@@ -56,7 +56,7 @@ init_assets :: proc(a: ^Assets) {
 	assign_shader_to_model(a.generic_diffuse_shader, &a.fridge_model)
 
 	a.fridge_bones_model = rl.LoadModel("res/models/fridge_bones.glb")
-	assign_shader_to_model(a.generic_diffuse_shader, &a.fridge_bones_model)
+	assign_shader_to_model(a.hori_wobble_diffuse_shader, &a.fridge_bones_model)
 
 	a.plane_model = rl.LoadModel("res/models/plane.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.plane_model)

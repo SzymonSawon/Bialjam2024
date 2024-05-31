@@ -7,8 +7,8 @@ import rl "vendor:raylib"
 EntityKind :: enum {
 	TEST,
 	TENTACLE,
-    SLIME,
-    FRIDGE,
+	SLIME,
+	FRIDGE,
 	CONTRUCTION_SITE,
 }
 
@@ -38,8 +38,8 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 		fmt.println("Hello, there")
 	case .TENTACLE:
 		player_hold_item(&w.player, w, .SQUID_MEAT)
-    case .SLIME:
-    case .FRIDGE:
+	case .SLIME:
+	case .FRIDGE:
 		player_hold_item(&w.player, w, .UNICORN_BONES)
 	case .CONTRUCTION_SITE:
 		recipe_try_add_ingredient(w, &w.current_recipe, w.player.held_item)
@@ -48,6 +48,21 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 }
 
 draw_entity :: proc(w: ^World, e: ^Entity) {
+	{
+		targetingFactor: f32 = 1 if e.targeted else 0
+		rl.SetShaderValue(
+			w.assets.generic_diffuse_shader,
+			rl.GetShaderLocation(w.assets.generic_diffuse_shader, "targetingFactor"),
+			&targetingFactor,
+			.FLOAT,
+		)
+		rl.SetShaderValue(
+			w.assets.hori_wobble_diffuse_shader,
+			rl.GetShaderLocation(w.assets.generic_diffuse_shader, "targetingFactor"),
+			&targetingFactor,
+			.FLOAT,
+		)
+	}
 	switch e.kind {
 	case .TEST:
 	case .TENTACLE:
@@ -67,7 +82,7 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 			{1, 1, 1},
 			rl.WHITE,
 		)
-    case .SLIME:
+	case .SLIME:
 		rl.DrawModelEx(
 			w.assets.slime_model,
 			e.position + {0, 0, 1.5},
@@ -76,10 +91,10 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 			{1, 1, 1},
 			rl.WHITE,
 		)
-    case .FRIDGE:
+	case .FRIDGE:
 		rl.DrawModelEx(
 			w.assets.fridge_model,
-			e.position + {0.1, 0.1, 0},
+			e.position + {0.05, 0.05, -0.02},
 			{1, 0, 0},
 			0,
 			{1, 1, 1},
@@ -88,7 +103,7 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 
 		rl.DrawModelEx(
 			w.assets.fridge_bones_model,
-			e.position + {0,0,-0.1},
+			e.position + {0, 0, -0.1},
 			{1, 0, 0},
 			0,
 			{1, 1, 1},

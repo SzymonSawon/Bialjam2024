@@ -80,6 +80,21 @@ update_shaders :: proc(w: ^World) {
 		&w.now,
 		.FLOAT,
 	)
+	rl.SetShaderValue(
+		w.assets.generic_diffuse_shader,
+		rl.GetShaderLocation(w.assets.generic_diffuse_shader, "time"),
+		&w.now,
+		.FLOAT,
+	)
+	{
+		targetingFactor: f32 = 0
+		rl.SetShaderValue(
+			w.assets.generic_diffuse_shader,
+			rl.GetShaderLocation(w.assets.generic_diffuse_shader, "targetingFactor"),
+			&targetingFactor,
+			.FLOAT,
+		)
+	}
 }
 
 update_music :: proc(w: ^World) {
