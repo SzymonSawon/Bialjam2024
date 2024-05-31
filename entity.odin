@@ -16,6 +16,7 @@ EntityKind :: enum {
 	EYE_BOWL,
 	GRAV_STABILIZER,
     TV,
+	BOBER,
 }
 
 Entity :: struct {
@@ -64,6 +65,10 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
             w.grav_stabilty = 30.0 - f32(w.round_number)
         }
 	case .TV:
+		w.grav_stabilty = 30
+	case .BOBER:
+        w.score += 25
+        w.bober_arrives_time = w.now + auto_cast rl.GetRandomValue(6, 9)
 	}
 
 }
@@ -218,19 +223,30 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 			item_model := item_get_model(w, it.item)
 			rl.DrawModelEx(item_model, e.position + angle_off, {0, 0, 1}, 0, {1, 1, 1}, rl.WHITE)
 		}
-    case .GRAV_STABILIZER:
-        scale: f32 = 1
-        if w.grav_stabilty < 0 {
-            scale = math.pow(math.sin(w.now * 3), 2) * 1 + 1
-        }
-        rl.DrawModelEx(
-            w.assets.button_model,
-            e.position + {0, 0, 0},
-            {1, 0, 0},
-            90,
-            {1, 1, 1} * scale,
-            rl.WHITE,
-        )
+	case .GRAV_STABILIZER:
+		scale: f32 = 1
+		if w.grav_stabilty < 0 {
+			scale = math.pow(math.sin(w.now * 3), 2) * 1 + 1
+		}
+		rl.DrawModelEx(
+			w.assets.button_model,
+			e.position + {0, 0, 0},
+			{1, 0, 0},
+			90,
+			{1, 1, 1} * scale,
+			rl.WHITE,
+		)
+	case .BOBER:
+        v := w.player.position - e.position
+        a := math.atan2(v.x, v.z)
+		rl.DrawModelEx(
+			w.assets.bober_model,
+			e.position + {0, 0, 0},
+			{0, 1, 0},
+			a * rl.RAD2DEG,
+			{1, 1, 1},
+			rl.WHITE,
+		)
 	}
 }
 
@@ -277,4 +293,8 @@ make_entity_tv :: proc() -> Entity {
 
 make_entity_grav_stabilizer :: proc() -> Entity {
 	return Entity{kind = .GRAV_STABILIZER, position = {-0.7, 0.8, -0.65}, size = {0.2, 0.2, 0.1}}
+}
+
+make_entity_bober :: proc() -> Entity {
+	return Entity{kind = .BOBER, position = {0, 5, 0}, size = {0.4, 0.4, 0.4}}
 }

@@ -32,6 +32,7 @@ Assets :: struct {
 	wrap_model:                 rl.Model,
 	skycube_model:              rl.Model,
 	button_model:               rl.Model,
+	bober_model:                rl.Model,
 	radio_music:                rl.Music,
 	smoke_sprite:               rl.Texture,
 	bell_sprite:                rl.Texture,
@@ -136,6 +137,9 @@ init_assets :: proc(a: ^Assets) {
 	a.button_model = rl.LoadModel("res/models/button.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.button_model)
 
+	a.bober_model = rl.LoadModel("res/models/bober.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.bober_model)
+
 	a.tv_model = rl.LoadModel("res/models/tv.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.tv_model)
 
@@ -169,6 +173,7 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadModel(a.shroom_model)
 	rl.UnloadModel(a.eye_model)
 	rl.UnloadModel(a.bowl_model)
+	rl.UnloadModel(a.bober_model)
 	rl.UnloadModel(a.tv_model)
 	rl.UnloadModel(a.wrap_model)
 	rl.UnloadTexture(a.smoke_sprite)

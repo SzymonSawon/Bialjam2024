@@ -35,6 +35,7 @@ World :: struct {
 	sk:                  SceneKind,
 	should_quit:         bool,
 	grav_stabilty:       f32,
+	bober_arrives_time:  f32,
 }
 
 init_world :: proc(w: ^World) {
@@ -92,6 +93,7 @@ init_world :: proc(w: ^World) {
 	append(&w.entities, make_entity_eye_bowl())
 	append(&w.entities, make_entity_construction_site())
 	append(&w.entities, make_entity_grav_stabilizer())
+	append(&w.entities, make_entity_bober())
 
 	when ODIN_DEBUG {
 		append(&w.entities, make_entity_test())
@@ -109,7 +111,7 @@ init_world :: proc(w: ^World) {
 	w.round_number = 0
 	w.start_round_time = 0
 	w.grav_stabilty = -1 // 30
-
+    w.bober_arrives_time = w.now + 20
 	w.current_round_time = 0
 	rl.PlayMusicStream(w.assets.radio_music)
 }
@@ -124,7 +126,8 @@ deinit_world :: proc(w: ^World) {
 
 update_world :: proc(w: ^World, dt: f32) {
 	w.now += dt
-	if w.round_number > 1 && (w.now - w.start_round_time >= w.max_round_time || w.grav_stabilty < -6) {
+	if w.round_number > 1 &&
+	   (w.now - w.start_round_time >= w.max_round_time || w.grav_stabilty < -6) {
 		world_set_scene(w, .GAME_OVER)
 	}
 	if w.come_to_window_time <= w.now && !w.slime_has_awakened {
@@ -147,8 +150,11 @@ update_world :: proc(w: ^World, dt: f32) {
 	}
 	if w.round_number > 1 {
 		w.grav_stabilty -= dt
-	}
+	} else {
+        w.bober_arrives_time = w.now + 3
+    }
 	update_player_movement(&w.player, dt)
+    update_bober(w, dt)
 	update_main_camera(w)
 	update_entity_targetting(w)
 	update_entity_interaction(w)
@@ -183,9 +189,9 @@ update_shaders :: proc(w: ^World) {
 	)
 	{
 		shakiness: f32 = 0
-        if w.grav_stabilty < 0 {
-            shakiness = 1
-        }
+		if w.grav_stabilty < 0 {
+			shakiness = 1
+		}
 		rl.SetShaderValue(
 			w.assets.postprocess_shader,
 			rl.GetShaderLocation(w.assets.postprocess_shader, "shakiness"),
