@@ -144,6 +144,23 @@ draw_3d_hud :: proc(w: ^World, dt: f32) {
 			)
 		}
 	}
+    if w.paused {
+        message: cstring= "To be continued..."
+        rl.DrawText(
+            message,
+            11,
+            cast(i32)screen_size.y - 50 + 1,
+            40,
+            rl.GRAY,
+        )
+        rl.DrawText(
+            message,
+            10,
+            cast(i32)screen_size.y - 50,
+            40,
+            rl.YELLOW,
+        )
+    }
 }
 
 draw_timer :: proc(w: ^World, screen_size: rl.Vector2, t: f32) {

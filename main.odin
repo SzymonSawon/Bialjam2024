@@ -15,6 +15,7 @@ main :: proc() {
 	rl.InitAudioDevice()
 	defer rl.CloseAudioDevice()
 
+    rl.SetExitKey(nil)
 
 	rl.SetTargetFPS(120)
 

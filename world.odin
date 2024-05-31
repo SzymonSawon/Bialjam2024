@@ -12,6 +12,7 @@ SceneKind :: enum {
 
 World :: struct {
 	now:                 f32,
+    paused:              bool,
 	assets:              Assets,
 	main_camera:         rl.Camera3D,
 	hud_camera:          rl.Camera3D,
@@ -40,6 +41,7 @@ World :: struct {
 
 init_world :: proc(w: ^World) {
 	w.now = 0
+    w.paused = false
 	w.should_quit = false
 
 	init_assets(&w.assets)
@@ -125,6 +127,13 @@ deinit_world :: proc(w: ^World) {
 }
 
 update_world :: proc(w: ^World, dt: f32) {
+	update_music(w)
+    if rl.IsKeyPressed(.ESCAPE) {
+        w.paused = !w.paused
+    }
+    if w.paused {
+        return
+    }
 	w.now += dt
 	if w.round_number > 1 &&
 	   (w.now - w.start_round_time >= w.max_round_time || w.grav_stabilty < -6) {
@@ -158,7 +167,6 @@ update_world :: proc(w: ^World, dt: f32) {
 	update_main_camera(w)
 	update_entity_targetting(w)
 	update_entity_interaction(w)
-	update_music(w)
 	update_shaders(w)
 }
 
