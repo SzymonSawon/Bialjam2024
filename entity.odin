@@ -98,7 +98,7 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 	case .SLIME:
 		time_since_change := w.now - w.come_to_window_time
 		change_offset := (1 - math.min(1, (time_since_change / 0.2))) * -0.5
-		if w.round_number > 0 && w.now - w.start_round_time < 2 {
+		if w.round_number > 0 && !w.slime_has_awakened && w.now - w.start_round_time < 2 {
 			draw_puff(w, e.position + {0, 0, 1.5}, 2, .9001)
 		}
 		rl.DrawModelEx(

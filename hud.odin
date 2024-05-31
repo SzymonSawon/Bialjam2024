@@ -30,7 +30,7 @@ draw_3d_hud :: proc(w: ^World, dt: f32) {
 	rl.DrawCircleLinesV(screen_size / 2, w.cursor_radius, rl.BLACK)
 
 	if w.player.held_item != .NONE {
-        message := rl.TextFormat("holding: %s", item_get_name(w.player.held_item))
+		message := rl.TextFormat("holding: %s", item_get_name(w.player.held_item))
 		rl.DrawText(
 			message,
 			auto_cast (screen_size.x * 0.5 + 21),
@@ -46,38 +46,48 @@ draw_3d_hud :: proc(w: ^World, dt: f32) {
 			rl.GREEN,
 		)
 	}
-    if w.round_number == 0{
-        rl.DrawText(
-            rl.TextFormat("Time left: %f", 9999999.9),
-            auto_cast (screen_size.x - 100),
-            auto_cast (screen_size.y - 20),
-            10,
-            rl.RED,
-        )
-    }
-	else if !w.slime_has_awakened || w.sk == .GAME_OVER{
-        rl.DrawText(
-            rl.TextFormat("Time left: %f", 0.0),
-            auto_cast (screen_size.x - 100),
-            auto_cast (screen_size.y - 20),
-            10,
-            rl.RED,
-        )
-    }
-    else{
-        rl.DrawText(
-            rl.TextFormat("Time left: %f", w.max_round_time - (w.now - w.start_round_time)),
-            auto_cast (screen_size.x - 100),
-            auto_cast (screen_size.y - 20),
-            10,
-            rl.RED,
-        )
-    }
-    rl.DrawText(
-        rl.TextFormat("Score: %f", w.score),
-        auto_cast (screen_size.x - 100),
-        auto_cast (screen_size.y - 40),
-        10,
-        rl.GREEN,
-    )
+
+	if !w.slime_has_awakened {
+		rl.DrawText(
+			rl.TextFormat("Time left: %f", 0.0),
+			auto_cast (screen_size.x - 100),
+			auto_cast (screen_size.y - 20),
+			10,
+			rl.RED,
+		)
+	} else {
+		if w.now - w.start_round_time < 2.5 {
+			rl.DrawTextureEx(
+				w.assets.bell_sprite,
+				{
+					20,
+					auto_cast (cast(i32)screen_size.y -
+						30 -
+						w.assets.bell_sprite.height / PIXELIZE),
+				},
+				math.sin(w.now * 10) * 10,
+				0.3,
+				rl.Color {
+					0xff,
+					0xff,
+					0xff,
+					auto_cast (0xff * math.sin((w.now - w.start_round_time) / 2.5 * rl.PI)),
+				},
+			)
+		}
+		rl.DrawText(
+			rl.TextFormat("Time left: %f", w.max_round_time - (w.now - w.start_round_time)),
+			auto_cast (screen_size.x - 100),
+			auto_cast (screen_size.y - 20),
+			10,
+			rl.RED,
+		)
+	}
+	rl.DrawText(
+		rl.TextFormat("Score: %f", w.score),
+		auto_cast (screen_size.x - 100),
+		auto_cast (screen_size.y - 40),
+		10,
+		rl.GREEN,
+	)
 }
