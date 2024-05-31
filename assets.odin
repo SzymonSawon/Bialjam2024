@@ -72,7 +72,11 @@ init_assets :: proc(a: ^Assets) {
 	a.lizard_hand_model = rl.LoadModel("res/models/lizard_hand.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.lizard_hand_model)
 
-	a.dragon_scale_model = rl.LoadModel("res/models/scale.glb")
+	a.dragon_scale_model = rl.LoadModel("res/models/scales.glb")
+	a.dragon_scale_model.transform =
+		rl.MatrixScale(0.1, 0.1, 0.1) *
+		rl.MatrixRotateXYZ({-rl.PI / 6, rl.PI / 4, 0}) *
+		rl.MatrixTranslate(-0.5, 0.1, 0)
 	assign_shader_to_model(a.hud_diffuse_shader, &a.dragon_scale_model)
 
 	a.plane_model = rl.LoadModel("res/models/plane.glb")

@@ -141,7 +141,6 @@ draw_world :: proc(w: ^World, dt: f32) {
 
 	rl.DrawModel(w.assets.foodtruck_model, {0, 0, 0}, 1, rl.WHITE)
 	rl.DrawModel(w.assets.świetlówka_model, {0, 1.25, 0}, 0.3, rl.WHITE)
-	rl.DrawModel(w.assets.dragon_scale_model, {0, 1, 0}, 1, rl.WHITE)
 
 	for &e in w.entities {
 		draw_entity(w, &e)
