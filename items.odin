@@ -25,7 +25,7 @@ item_get_model :: proc(w: ^World, it: Item) -> rl.Model {
 	case .EYE_OF_CTHULU:
 		return w.assets.squid_meat_model
 	case .MUSHROOMS:
-		return w.assets.squid_meat_model
+		return w.assets.shroom_model
 	case .VOID_MAYO:
 		return w.assets.squid_meat_model
 	case .UNICORN_BONES:

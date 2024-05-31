@@ -50,7 +50,7 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 		recipe_try_add_ingredient(w, &w.current_recipe, w.player.held_item)
 		player_hold_item(&w.player, w, .NONE)
 	case .SHROOM_BOX:
-
+		player_hold_item(&w.player, w, .MUSHROOMS)
 	case .MAYO_JAR:
 	}
 	
@@ -138,12 +138,19 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 			{1, 1, 1},
 			rl.WHITE,
 		)
-
-	case .CONTRUCTION_SITE:
-
 	case .SHROOM_BOX:
+		rl.DrawModelEx(
+			w.assets.shroombox_model,
+			e.position + {0,0,0.1},
+			{0, 0, 1},
+			-45,
+			{1, 1, 1},
+			rl.WHITE,
+		)
 
 	case .MAYO_JAR:
+
+	case .CONTRUCTION_SITE:
 	}
 }
 
@@ -165,6 +172,10 @@ make_entity_fridge :: proc() -> Entity {
 
 make_entity_lizard_hand :: proc() -> Entity {
 	return Entity{kind = .LIZARD_HAND, position = {-0.5, 0.5, -0.4}, size = {0.2, 0.2, 0.3}}
+}
+
+make_entity_shroom_box :: proc() -> Entity {
+	return Entity{kind = .SHROOM_BOX, position = {-1.15, 0.95, 0.1}, size = {0.2, 0.2, 0.5}}
 }
 
 make_entity_construction_site :: proc() -> Entity {

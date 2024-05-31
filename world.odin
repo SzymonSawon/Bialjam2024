@@ -51,6 +51,7 @@ init_world :: proc(w: ^World) {
 	append(&w.entities, make_entity_slime())
 	append(&w.entities, make_entity_fridge())
 	append(&w.entities, make_entity_lizard_hand())
+	append(&w.entities, make_entity_shroom_box())
 	append(&w.entities, make_entity_construction_site())
 
 	when ODIN_DEBUG {

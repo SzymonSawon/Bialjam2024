@@ -100,7 +100,7 @@ init_assets :: proc(a: ^Assets) {
 	assign_shader_to_model(a.generic_diffuse_shader, &a.mayo_model)
 
 	a.shroombox_model = rl.LoadModel("res/models/mushroom_box.glb")
-	assign_shader_to_model(a.generic_diffuse_shader, &a.shroombox_model)
+	// assign_shader_to_model(a.generic_diffuse_shader, &a.shroombox_model)
 
 	a.shroom_model = rl.LoadModel("res/models/mushroom_solo.glb")
 	assign_shader_to_model(a.hud_diffuse_shader, &a.shroom_model)
