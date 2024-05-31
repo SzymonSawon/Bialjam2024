@@ -9,11 +9,12 @@ BACKGROUND :: rl.Color{0x18, 0x18, 0x18, 0xff}
 PIXELIZE :: 4
 
 main :: proc() {
+	rl.SetConfigFlags({.WINDOW_TOPMOST, .WINDOW_HIGHDPI, .WINDOW_RESIZABLE})
 	rl.InitWindow(WIDTH, HEIGHT, "InterdimensionalFoodTruck")
 	defer rl.CloseWindow()
 
-    rl.InitAudioDevice()
-    defer rl.CloseAudioDevice()
+	rl.InitAudioDevice()
+	defer rl.CloseAudioDevice()
 
 	rl.SetTargetFPS(120)
 	rl.DisableCursor()
