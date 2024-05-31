@@ -21,10 +21,13 @@ Assets :: struct {
 	dragon_scale_model:         rl.Model,
 	plane_model:                rl.Model,
 	świetlówka_model:           rl.Model,
-	spoon_model:				rl.Model,
-	mayo_model:					rl.Model,
-	shroom_model:				rl.Model,
-	shroombox_model:			rl.Model,
+	spoon_model:                rl.Model,
+	mayo_model:                 rl.Model,
+	shroom_model:               rl.Model,
+	shroombox_model:            rl.Model,
+	eye_model:                  rl.Model,
+	bowl_model:                 rl.Model,
+	wrap_model:                  rl.Model,
 	radio_music:                rl.Music,
 	good_ingredient_sound:      rl.Sound,
 	bad_ingredient_sound:       rl.Sound,
@@ -94,16 +97,26 @@ init_assets :: proc(a: ^Assets) {
 	a.bad_ingredient_sound = rl.LoadSound("res/sounds/bad_ingridient.mp3")
 
 	a.spoon_model = rl.LoadModel("res/models/lyzka.glb")
+	a.spoon_model.transform = rl.MatrixRotateXYZ({-rl.PI / 4, -6 * rl.PI / 4, 0})
 	assign_shader_to_model(a.hud_diffuse_shader, &a.spoon_model)
 
 	a.mayo_model = rl.LoadModel("res/models/sloik.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.mayo_model)
 
 	a.shroombox_model = rl.LoadModel("res/models/mushroom_box.glb")
-	// assign_shader_to_model(a.generic_diffuse_shader, &a.shroombox_model)
+	assign_shader_to_model(a.generic_diffuse_shader, &a.shroombox_model)
 
 	a.shroom_model = rl.LoadModel("res/models/mushroom_solo.glb")
 	assign_shader_to_model(a.hud_diffuse_shader, &a.shroom_model)
+
+	a.eye_model = rl.LoadModel("res/models/eye_solo.glb")
+	assign_shader_to_model(a.hud_diffuse_shader, &a.eye_model)
+
+	a.bowl_model = rl.LoadModel("res/models/bowl.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.bowl_model)
+
+	a.wrap_model = rl.LoadModel("res/models/wrap.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.wrap_model)
 }
 
 deinit_assets :: proc(a: ^Assets) {
@@ -125,6 +138,9 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadModel(a.mayo_model)
 	rl.UnloadModel(a.shroombox_model)
 	rl.UnloadModel(a.shroom_model)
+	rl.UnloadModel(a.eye_model)
+	rl.UnloadModel(a.bowl_model)
+	rl.UnloadModel(a.wrap_model)
 	rl.UnloadMusicStream(a.radio_music)
 	rl.UnloadSound(a.good_ingredient_sound)
 	rl.UnloadSound(a.bad_ingredient_sound)

@@ -23,11 +23,11 @@ item_get_model :: proc(w: ^World, it: Item) -> rl.Model {
 	case .CHINESE_SCALE:
 		return w.assets.dragon_scale_model
 	case .EYE_OF_CTHULU:
-		return w.assets.squid_meat_model
+		return w.assets.eye_model
 	case .MUSHROOMS:
 		return w.assets.shroom_model
 	case .VOID_MAYO:
-		return w.assets.squid_meat_model
+		return w.assets.spoon_model
 	case .UNICORN_BONES:
 		return w.assets.unicorn_bones_model
 	}

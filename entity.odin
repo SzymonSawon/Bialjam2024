@@ -13,6 +13,7 @@ EntityKind :: enum {
 	CONTRUCTION_SITE,
 	SHROOM_BOX,
 	MAYO_JAR,
+	EYE_BOWL,
 }
 
 Entity :: struct {
@@ -52,6 +53,9 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 	case .SHROOM_BOX:
 		player_hold_item(&w.player, w, .MUSHROOMS)
 	case .MAYO_JAR:
+		player_hold_item(&w.player, w, .VOID_MAYO)
+	case .EYE_BOWL:
+		player_hold_item(&w.player, w, .EYE_OF_CTHULU)
 	}
 	
 }
@@ -149,8 +153,34 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 		)
 
 	case .MAYO_JAR:
+		rl.DrawModelEx(
+			w.assets.mayo_model,
+			e.position + {0,0,0},
+			{0, 0, 1},
+			0,
+			{1, 1, 1},
+			rl.WHITE,
+		)
+
+    case .EYE_BOWL:
+		rl.DrawModelEx(
+			w.assets.bowl_model,
+			e.position + {0,0,0},
+			{0, 0, 1},
+			0,
+			{1, 1, 1},
+			rl.WHITE,
+		)
 
 	case .CONTRUCTION_SITE:
+		rl.DrawModelEx(
+			w.assets.wrap_model,
+			e.position + {0,-0.13,0},
+			{0, 0, 1},
+			0,
+			{1, 1, 1},
+			rl.WHITE,
+		)
 	}
 }
 
@@ -178,6 +208,14 @@ make_entity_shroom_box :: proc() -> Entity {
 	return Entity{kind = .SHROOM_BOX, position = {-1.15, 0.95, 0.1}, size = {0.2, 0.2, 0.5}}
 }
 
+make_entity_mayo_jar :: proc() -> Entity {
+	return Entity{kind = .MAYO_JAR, position = {-0.9, 0.75, 0.5}, size = {0.2, 0.2, 0.2}}
+}
+
+make_entity_eye_bowl :: proc() -> Entity {
+	return Entity{kind = .EYE_BOWL, position = {-0.6, 0.75, 0.45}, size = {0.2, 0.2, 0.2}}
+}
+
 make_entity_construction_site :: proc() -> Entity {
-	return Entity{kind = .CONTRUCTION_SITE, position = {0, 0.6, 0.5}, size = {0.6, 0.2, 0.6}}
+	return Entity{kind = .CONTRUCTION_SITE, position = {0, 0.7, 0.4}, size = {0.5, 0.2, 0.5}}
 }
