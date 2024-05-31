@@ -34,17 +34,18 @@ World :: struct {
 	score:               f32,
 	sk:                  SceneKind,
 	should_quit:         bool,
+	grav_stabilty:       f32,
 }
 
 init_world :: proc(w: ^World) {
-    w.now = 0
+	w.now = 0
 	w.should_quit = false
 
 	init_assets(&w.assets)
 
 	when ODIN_DEBUG {
 		w.sk = .GAMEPLAY
-        rl.DisableCursor()
+		rl.DisableCursor()
 	} else {
 		w.sk = .MENU
 	}
@@ -80,7 +81,7 @@ init_world :: proc(w: ^World) {
 
 	init_player(&w.player)
 
-    w.targetted_entity = nil
+	w.targetted_entity = nil
 
 	append(&w.entities, make_entity_tentacle())
 	append(&w.entities, make_entity_slime())
@@ -90,6 +91,7 @@ init_world :: proc(w: ^World) {
 	append(&w.entities, make_entity_mayo_jar())
 	append(&w.entities, make_entity_eye_bowl())
 	append(&w.entities, make_entity_construction_site())
+	append(&w.entities, make_entity_grav_stabilizer())
 
 	when ODIN_DEBUG {
 		append(&w.entities, make_entity_test())
@@ -98,14 +100,15 @@ init_world :: proc(w: ^World) {
 	w.recipe_layer = rl.LoadRenderTexture(RECIPE_LAYER_SIZE, RECIPE_LAYER_SIZE)
 	w.assets.plane_model.materials[1].maps[0].texture = w.recipe_layer.texture
 
-    w.slime_has_awakened = false
+	w.slime_has_awakened = false
 	w.max_round_time = 15
 	w.current_recipe = make_recipe(w)
 	w.come_to_window_time = w.now + 5
-    w.last_screen_size = {0, 0}
-    w.score = 0
-    w.round_number = 0
-    w.start_round_time = 0
+	w.last_screen_size = {0, 0}
+	w.score = 0
+	w.round_number = 0
+	w.start_round_time = 0
+	w.grav_stabilty = -1 // 30
 
 	w.current_round_time = 0
 	rl.PlayMusicStream(w.assets.radio_music)
@@ -121,7 +124,7 @@ deinit_world :: proc(w: ^World) {
 
 update_world :: proc(w: ^World, dt: f32) {
 	w.now += dt
-	if w.round_number > 1 && w.now - w.start_round_time >= w.max_round_time {
+	if w.round_number > 1 && (w.now - w.start_round_time >= w.max_round_time || w.grav_stabilty < -6) {
 		world_set_scene(w, .GAME_OVER)
 	}
 	if w.come_to_window_time <= w.now && !w.slime_has_awakened {
@@ -139,6 +142,9 @@ update_world :: proc(w: ^World, dt: f32) {
 			f32(w.current_recipe.ingredients_count) *
 			math.max(0, (w.max_round_time - (w.now - w.start_round_time)))
 		w.start_round_time = w.now
+	}
+	if w.round_number > 1 {
+		w.grav_stabilty -= dt
 	}
 	update_player_movement(&w.player, dt)
 	update_main_camera(w)
@@ -163,10 +169,28 @@ update_shaders :: proc(w: ^World) {
 	)
 	rl.SetShaderValue(
 		w.assets.skycube_shader,
-		rl.GetShaderLocation(w.assets.generic_diffuse_shader, "time"),
+		rl.GetShaderLocation(w.assets.skycube_shader, "time"),
 		&w.now,
 		.FLOAT,
 	)
+	rl.SetShaderValue(
+		w.assets.postprocess_shader,
+		rl.GetShaderLocation(w.assets.postprocess_shader, "time"),
+		&w.now,
+		.FLOAT,
+	)
+	{
+		shakiness: f32 = 0
+        if w.grav_stabilty < 0 {
+            shakiness = 1
+        }
+		rl.SetShaderValue(
+			w.assets.postprocess_shader,
+			rl.GetShaderLocation(w.assets.postprocess_shader, "shakiness"),
+			&shakiness,
+			.FLOAT,
+		)
+	}
 	{
 		targetingFactor: f32 = 0
 		rl.SetShaderValue(
@@ -273,6 +297,6 @@ world_set_scene :: proc(w: ^World, sk: SceneKind) {
 }
 
 world_reload :: proc(w: ^World) {
-    deinit_world(w)
-    init_world(w)
+	deinit_world(w)
+	init_world(w)
 }

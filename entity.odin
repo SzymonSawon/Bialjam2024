@@ -14,6 +14,7 @@ EntityKind :: enum {
 	SHROOM_BOX,
 	MAYO_JAR,
 	EYE_BOWL,
+	GRAV_STABILIZER,
 }
 
 Entity :: struct {
@@ -56,6 +57,8 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 		player_hold_item(&w.player, w, .VOID_MAYO)
 	case .EYE_BOWL:
 		player_hold_item(&w.player, w, .EYE_OF_CTHULU)
+	case .GRAV_STABILIZER:
+		w.grav_stabilty = 30
 	}
 
 }
@@ -202,6 +205,19 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 			item_model := item_get_model(w, it.item)
 			rl.DrawModelEx(item_model, e.position + angle_off, {0, 0, 1}, 0, {1, 1, 1}, rl.WHITE)
 		}
+    case .GRAV_STABILIZER:
+        scale: f32 = 1
+        if w.grav_stabilty < 0 {
+            scale = math.pow(math.sin(w.now * 3), 2) * 1 + 1
+        }
+        rl.DrawModelEx(
+            w.assets.button_model,
+            e.position + {0, 0, 0},
+            {1, 0, 0},
+            90,
+            {1, 1, 1} * scale,
+            rl.WHITE,
+        )
 	}
 }
 
@@ -239,4 +255,8 @@ make_entity_eye_bowl :: proc() -> Entity {
 
 make_entity_construction_site :: proc() -> Entity {
 	return Entity{kind = .CONTRUCTION_SITE, position = {0, 0.7, 0.4}, size = {0.5, 0.2, 0.5}}
+}
+
+make_entity_grav_stabilizer :: proc() -> Entity {
+	return Entity{kind = .GRAV_STABILIZER, position = {-0.7, 0.8, -0.65}, size = {0.2, 0.2, 0.1}}
 }

@@ -30,6 +30,7 @@ Assets :: struct {
 	bowl_model:                 rl.Model,
 	wrap_model:                 rl.Model,
 	skycube_model:              rl.Model,
+	button_model:               rl.Model,
 	radio_music:                rl.Music,
 	smoke_sprite:               rl.Texture,
 	bell_sprite:                rl.Texture,
@@ -133,6 +134,9 @@ init_assets :: proc(a: ^Assets) {
 
 	a.skycube_model = rl.LoadModel("res/models/cube.glb")
 	assign_shader_to_model(a.skycube_shader, &a.skycube_model)
+
+	a.button_model = rl.LoadModel("res/models/button.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.button_model)
 
 	a.smoke_sprite = rl.LoadTexture("res/sprites/magic_smoke.png")
 

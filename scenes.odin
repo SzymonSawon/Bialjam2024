@@ -19,25 +19,30 @@ menu_scene :: proc(w: ^World) {
 game_over_scene :: proc(w: ^World) {
 	screen_size := rl.Vector2{auto_cast rl.GetRenderWidth(), auto_cast rl.GetRenderHeight()}
 
-	rl.DrawRectangle(0, 0, rl.GetScreenWidth(), rl.GetScreenHeight(), rl.ColorAlpha(rl.RED, 0.5))
+	rl.DrawRectangle(0, 0, rl.GetRenderWidth(), rl.GetRenderHeight(), rl.ColorAlpha(rl.RED, 0.5))
 	{
 		message: cstring = "Game over!"
 		width := rl.MeasureText(message, 40)
 		rl.DrawText(message, auto_cast screen_size.x / 2 - width / 2, auto_cast screen_size.y / 2 - 100, 40, rl.WHITE)
 	}
 
-	rl.DrawRectangle(0, 0, rl.GetScreenWidth(), rl.GetScreenHeight(), rl.ColorAlpha(rl.RED, 0.5))
 	{
 		message:=rl.TextFormat("your score was: %d", cast(i32)w.score) 
 		width := rl.MeasureText(message, 30)
 		rl.DrawText(message, auto_cast screen_size.x / 2 - width / 2, auto_cast screen_size.y / 2 - 50, 30, rl.WHITE)
 	}
 
-	if (gui_button({screen_size.x / 2 - 100, screen_size.y / 2}, "Restart")) {
+	{
+		message:=rl.TextFormat("you survived %d rounds", w.round_number - 1) 
+		width := rl.MeasureText(message, 30)
+		rl.DrawText(message, auto_cast screen_size.x / 2 - width / 2, auto_cast screen_size.y / 2 - 20, 30, rl.WHITE)
+	}
+
+	if (gui_button({screen_size.x / 2 - 100, screen_size.y / 2 + 30}, "Restart")) {
         world_reload(w)
 		world_set_scene(w, .GAMEPLAY)
 	}
-	if (gui_button({screen_size.x / 2 - 100, screen_size.y / 2 + 50}, "Menu")) {
+	if (gui_button({screen_size.x / 2 - 100, screen_size.y / 2 + 80}, "Menu")) {
         world_reload(w)
 		world_set_scene(w, .MENU)
 	}

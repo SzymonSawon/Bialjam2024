@@ -8,6 +8,9 @@ uniform sampler2D texture0;
 
 uniform vec2 resolution;
 
+uniform float shakiness = 0;
+uniform float time = 0;
+
 const int indexMatrix4x4[16] = int[](
         0, 8, 2, 10,
         12, 4, 14, 6,
@@ -23,6 +26,7 @@ float indexValue() {
 void main()
 {
     vec2 uv = fragTexCoord * vec2(1, -1);
+    uv += vec2(cos(time * 100), sin(2*time * 100)) * 0.01 * shakiness;
     vec4 texelColor = texture(texture0, uv);
 
     finalColor = texelColor;

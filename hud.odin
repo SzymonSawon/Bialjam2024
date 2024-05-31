@@ -23,14 +23,20 @@ draw_3d_hud :: proc(w: ^World, dt: f32) {
 	screen_size :=
 		rl.Vector2{auto_cast rl.GetRenderWidth(), auto_cast rl.GetRenderHeight()} / PIXELIZE
 
-    if w.targetted_entity != nil {
-        w.cursor_radius_t = 5
-        if w.round_number <= 1 {
-            rl.DrawTextureEx(w.assets.lmb_sprite, screen_size / 2 + 10, math.sin(w.now * 5) * 20, 0.3, rl.WHITE)
-        }
-    } else {
-        w.cursor_radius_t = 1
-    }
+	if w.targetted_entity != nil {
+		w.cursor_radius_t = 5
+		if w.round_number <= 1 {
+			rl.DrawTextureEx(
+				w.assets.lmb_sprite,
+				screen_size / 2 + 10,
+				math.sin(w.now * 5) * 20,
+				0.3,
+				rl.WHITE,
+			)
+		}
+	} else {
+		w.cursor_radius_t = 1
+	}
 	w.cursor_radius = math.lerp(w.cursor_radius, w.cursor_radius_t, 10 * dt)
 
 	rl.DrawCircleLinesV(screen_size / 2, w.cursor_radius + 1, rl.WHITE)
@@ -99,12 +105,51 @@ draw_3d_hud :: proc(w: ^World, dt: f32) {
 			rl.BLACK,
 		)
 	}
+
+	if w.grav_stabilty < 0 {
+		{
+            message : cstring = "!!! Grav. anoM detected !!!"
+			text_width := rl.MeasureText(message, 30)
+			rl.DrawText(
+				message,
+				cast(i32)screen_size.x / 2 - text_width / 2 + 1,
+				cast(i32)screen_size.y / 2 - 50 + 1,
+				30,
+				rl.BLACK,
+			)
+			rl.DrawText(
+				message,
+				cast(i32)screen_size.x / 2 - text_width / 2,
+				cast(i32)screen_size.y / 2 - 50,
+				30,
+				rl.RED,
+			)
+		}
+		{
+            message:= rl.TextFormat("You have %d seconds to react", cast(i32)(w.grav_stabilty + 6))
+			text_width := rl.MeasureText(message, 10)
+			rl.DrawText(
+				message,
+				cast(i32)screen_size.x / 2 - text_width / 2 + 1,
+				cast(i32)screen_size.y / 2 + 1,
+				10,
+				rl.BLACK,
+			)
+			rl.DrawText(
+				message,
+				cast(i32)screen_size.x / 2 - text_width / 2,
+				cast(i32)screen_size.y / 2,
+				10,
+				rl.RED,
+			)
+		}
+	}
 }
 
 draw_timer :: proc(w: ^World, screen_size: rl.Vector2, t: f32) {
-    if w.round_number == 1 {
-        return
-    }
+	if w.round_number == 1 {
+		return
+	}
 	rl.DrawTextureEx(w.assets.timer_sprite, {20, 20}, 0, 0.3, rl.WHITE)
 	rl.DrawCircleV(
 		{20, 20} +

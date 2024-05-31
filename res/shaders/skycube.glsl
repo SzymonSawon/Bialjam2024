@@ -13,7 +13,7 @@ float rand(vec3 co) {
 
 void main()
 {
-    float color = rand(floor(fragNormal * 150) / 150 + vec3(time, 0, 0));
+    float color = rand(floor((fragNormal) * 150) / 150);
     color = smoothstep(0.995, 1, color);
     finalColor = vec4(vec3(color), 1);
 }
