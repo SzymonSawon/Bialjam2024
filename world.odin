@@ -83,7 +83,7 @@ deinit_world :: proc(w: ^World) {
 
 update_world :: proc(w: ^World, dt: f32) {
 	w.now += dt
-	if w.now - w.start_round_time >= w.start_round_time + w.max_round_time {
+	if w.round_number > 1 && w.now - w.start_round_time >= w.start_round_time + w.max_round_time {
 		w.sk = .GAME_OVER
 		fmt.printfln("you lost")
 	}
@@ -98,7 +98,7 @@ update_world :: proc(w: ^World, dt: f32) {
         w.slime_has_awakened = false
         w.current_recipe = make_recipe(w)
         w.max_round_time -= 1
-        w.score += f32(w.current_recipe.ingredients_count) * (w.max_round_time - (w.now - w.start_round_time))
+        w.score += f32(w.current_recipe.ingredients_count) * math.max(0,(w.max_round_time - (w.now - w.start_round_time)))
         w.start_round_time = w.now
     }
 	update_player_movement(&w.player, dt)

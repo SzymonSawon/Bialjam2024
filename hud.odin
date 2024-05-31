@@ -95,6 +95,9 @@ draw_3d_hud :: proc(w: ^World, dt: f32) {
 }
 
 draw_timer :: proc(w: ^World, screen_size: rl.Vector2, t: f32) {
+    if w.round_number == 1 {
+        return
+    }
 	rl.DrawTextureEx(w.assets.timer_sprite, {20, 20}, 0, 0.3, rl.WHITE)
 	rl.DrawCircleV(
 		{20, 20} +
