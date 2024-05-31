@@ -69,6 +69,7 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 	case .BOBER:
         w.score += 25
         w.bober_arrives_time = w.now + auto_cast rl.GetRandomValue(6, 9)
+        rl.PlaySound(w.assets.bober_catch_sound)
 	}
 
 }
