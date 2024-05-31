@@ -122,6 +122,12 @@ update_shaders :: proc(w: ^World) {
 		&w.now,
 		.FLOAT,
 	)
+	rl.SetShaderValue(
+		w.assets.skycube_shader,
+		rl.GetShaderLocation(w.assets.generic_diffuse_shader, "time"),
+		&w.now,
+		.FLOAT,
+	)
 	{
 		targetingFactor: f32 = 0
 		rl.SetShaderValue(
@@ -148,6 +154,7 @@ draw_world :: proc(w: ^World, dt: f32) {
 
 	rl.DrawModel(w.assets.foodtruck_model, {0, 0, 0}, 1, rl.WHITE)
 	rl.DrawModel(w.assets.świetlówka_model, {0, 1.25, 0}, 0.3, rl.WHITE)
+	rl.DrawModel(w.assets.skycube_model, {0, 0, 0}, 30, rl.WHITE)
 
 	for &e in w.entities {
 		draw_entity(w, &e)

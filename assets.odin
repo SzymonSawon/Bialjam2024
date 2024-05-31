@@ -9,6 +9,7 @@ Assets :: struct {
 	generic_diffuse_shader:     rl.Shader,
 	hud_diffuse_shader:         rl.Shader,
 	hori_wobble_diffuse_shader: rl.Shader,
+	skycube_shader:             rl.Shader,
 	foodtruck_model:            rl.Model,
 	tentacle_model:             rl.Model,
 	portal_model:               rl.Model,
@@ -28,6 +29,7 @@ Assets :: struct {
 	eye_model:                  rl.Model,
 	bowl_model:                 rl.Model,
 	wrap_model:                 rl.Model,
+	skycube_model:              rl.Model,
 	radio_music:                rl.Music,
 	smoke_sprite:               rl.Texture,
 	bell_sprite:                rl.Texture,
@@ -51,6 +53,10 @@ init_assets :: proc(a: ^Assets) {
 	a.hori_wobble_diffuse_shader = rl.LoadShader(
 		"res/shaders/vertex_wobble_horizontal.glsl",
 		"res/shaders/diffuse.glsl",
+	)
+	a.skycube_shader = rl.LoadShader(
+		"res/shaders/vertex.glsl",
+		"res/shaders/skycube.glsl",
 	)
 
 	a.foodtruck_model = rl.LoadModel("res/models/foodtruck.glb")
@@ -124,6 +130,9 @@ init_assets :: proc(a: ^Assets) {
 
 	a.wrap_model = rl.LoadModel("res/models/wrap.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.wrap_model)
+
+	a.skycube_model = rl.LoadModel("res/models/cube.glb")
+	assign_shader_to_model(a.skycube_shader, &a.skycube_model)
 
 	a.smoke_sprite = rl.LoadTexture("res/sprites/magic_smoke.png")
 
