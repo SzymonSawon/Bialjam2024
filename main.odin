@@ -27,6 +27,9 @@ main :: proc() {
 		if rl.IsKeyPressed(.F11) {
 			rl.ToggleFullscreen()
 		}
+        if rl.IsKeyPressed(.F6) && rl.IsKeyDown(.LEFT_CONTROL) {
+            world_reload(&world);
+        }
 		dt := rl.GetFrameTime()
 
         when ODIN_DEBUG {

@@ -315,4 +315,5 @@ world_set_scene :: proc(w: ^World, sk: SceneKind) {
 world_reload :: proc(w: ^World) {
 	deinit_world(w)
 	init_world(w)
+    rl.EnableCursor();
 }
