@@ -19,6 +19,7 @@ World :: struct {
 	current_recipe:      Recipe,
 	come_to_window_time: f32,
 	slime_has_awakened:  bool,
+	round_number:        int,
 	cursor_radius:       f32,
 	cursor_radius_t:     f32,
 	current_round_time:  f32,
@@ -84,6 +85,7 @@ update_world :: proc(w: ^World, dt: f32, sk: ^SceneKind) {
 	w.now += dt
 	if w.now - w.start_round_time >= w.start_round_time + w.max_round_time {
 		sk^ = .GAME_OVER
+		fmt.printfln("you lost")
 	}
 	if !recipe_is_done(&w.current_recipe) {
 		w.current_round_time = w.now
@@ -91,6 +93,7 @@ update_world :: proc(w: ^World, dt: f32, sk: ^SceneKind) {
 	if w.come_to_window_time <= w.now && !w.slime_has_awakened {
 		w.slime_has_awakened = true
         rl.PlaySound(w.assets.ding_sound)
+		w.round_number += 1
 		//TODO: add sound effect
 		w.start_round_time = w.now
 	}
@@ -100,6 +103,7 @@ update_world :: proc(w: ^World, dt: f32, sk: ^SceneKind) {
 		w.current_recipe = make_recipe()
 		w.max_round_time -= 1
         w.score+= f32(w.current_recipe.ingredients_count) * (w.max_round_time - (w.now - w.start_round_time))
+		w.start_round_time = w.now
 	}
 	update_player_movement(&w.player, dt)
 	update_main_camera(w)
@@ -162,12 +166,11 @@ draw_world :: proc(w: ^World, dt: f32) {
 }
 
 update_render_textures :: proc(w: ^World) {
-    when ODIN_OS == .Darwin {
-        screen_size := rl.Vector2{auto_cast rl.GetScreenWidth(), auto_cast rl.GetScreenHeight()}
-    } else {
-        screen_size :=
-            rl.Vector2{auto_cast rl.GetRenderWidth(), auto_cast rl.GetRenderHeight()}
-    }
+	when ODIN_OS == .Darwin {
+		screen_size := rl.Vector2{auto_cast rl.GetScreenWidth(), auto_cast rl.GetScreenHeight()}
+	} else {
+		screen_size := rl.Vector2{auto_cast rl.GetRenderWidth(), auto_cast rl.GetRenderHeight()}
+	}
 	if screen_size != w.last_screen_size {
 		w.last_screen_size = screen_size
 		rl.UnloadRenderTexture(w.world_layer)

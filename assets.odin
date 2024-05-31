@@ -29,6 +29,7 @@ Assets :: struct {
 	bowl_model:                 rl.Model,
 	wrap_model:                 rl.Model,
 	radio_music:                rl.Music,
+	smoke_sprite:               rl.Texture,
 	good_ingredient_sound:      rl.Sound,
 	bad_ingredient_sound:       rl.Sound,
 	ding_sound:                  rl.Sound,
@@ -120,6 +121,8 @@ init_assets :: proc(a: ^Assets) {
 
 	a.wrap_model = rl.LoadModel("res/models/wrap.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.wrap_model)
+
+	a.smoke_sprite = rl.LoadTexture("res/sprites/magic_smoke.png")
 }
 
 deinit_assets :: proc(a: ^Assets) {
@@ -144,6 +147,7 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadModel(a.eye_model)
 	rl.UnloadModel(a.bowl_model)
 	rl.UnloadModel(a.wrap_model)
+	rl.UnloadTexture(a.smoke_sprite)
 	rl.UnloadMusicStream(a.radio_music)
 	rl.UnloadSound(a.good_ingredient_sound)
 	rl.UnloadSound(a.bad_ingredient_sound)

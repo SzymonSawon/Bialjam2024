@@ -57,7 +57,7 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 	case .EYE_BOWL:
 		player_hold_item(&w.player, w, .EYE_OF_CTHULU)
 	}
-	
+
 }
 
 draw_entity :: proc(w: ^World, e: ^Entity) {
@@ -97,16 +97,24 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 		)
 	case .SLIME:
 		time_since_change := w.now - w.come_to_window_time
-        change_offset := (1 - math.min(1, (time_since_change / 0.2))) * -0.5
-        rl.DrawModelEx(
-            w.assets.slime_model,
-            e.position + {0, 0 + change_offset , 1.5 - change_offset},
-            {1, 0, 0},
-            0,
-            {1, 1, 1},
-            rl.WHITE,
-        )
-        rl.DrawModel(w.assets.plane_model, e.position + {0.3, 0 + change_offset, 1.28 - change_offset}, 1, rl.WHITE)
+		change_offset := (1 - math.min(1, (time_since_change / 0.2))) * -0.5
+		if w.round_number > 0 && w.now - w.start_round_time < 2 {
+			draw_puff(w, e.position + {0, 0, 1.5}, 2, .9001)
+		}
+		rl.DrawModelEx(
+			w.assets.slime_model,
+			e.position + {0, 0 + change_offset, 1.5 - change_offset},
+			{1, 0, 0},
+			0,
+			{1, 1, 1},
+			rl.WHITE,
+		)
+		rl.DrawModel(
+			w.assets.plane_model,
+			e.position + {0.3, 0 + change_offset, 1.28 - change_offset},
+			1,
+			rl.WHITE,
+		)
 	case .FRIDGE:
 		rl.DrawModelEx(
 			w.assets.fridge_model,
@@ -136,7 +144,7 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 		)
 		rl.DrawModelEx(
 			w.assets.lizard_hand_model,
-			e.position + {0,0,0.1},
+			e.position + {0, 0, 0.1},
 			{0, 1, 0},
 			-90,
 			{1, 1, 1},
@@ -145,7 +153,7 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 	case .SHROOM_BOX:
 		rl.DrawModelEx(
 			w.assets.shroombox_model,
-			e.position + {0,0,0.1},
+			e.position + {0, 0, 0.1},
 			{0, 0, 1},
 			-45,
 			{1, 1, 1},
@@ -155,17 +163,17 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 	case .MAYO_JAR:
 		rl.DrawModelEx(
 			w.assets.mayo_model,
-			e.position + {0,0,0},
+			e.position + {0, 0, 0},
 			{0, 0, 1},
 			0,
 			{1, 1, 1},
 			rl.WHITE,
 		)
 
-    case .EYE_BOWL:
+	case .EYE_BOWL:
 		rl.DrawModelEx(
 			w.assets.bowl_model,
-			e.position + {0,0,0},
+			e.position + {0, 0, 0},
 			{0, 0, 1},
 			0,
 			{1, 1, 1},
@@ -173,14 +181,35 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 		)
 
 	case .CONTRUCTION_SITE:
-		rl.DrawModelEx(
-			w.assets.wrap_model,
-			e.position + {0,-0.13,0},
-			{0, 0, 1},
-			0,
-			{1, 1, 1},
-			rl.WHITE,
-		)
+		if w.slime_has_awakened {
+			rl.DrawModelEx(
+				w.assets.wrap_model,
+				e.position + {0, -0.13, 0},
+				{0, 0, 1},
+				0,
+				{1, 1, 1},
+				rl.WHITE,
+			)
+		}
+
+		if w.round_number > 0 && w.now - w.start_round_time < 2 {
+			draw_puff(w, e.position, 2, .2324)
+		}
+
+		for it, ind in w.current_recipe.ingredients {
+			if !it.done {
+				continue
+			}
+			angle_off: rl.Vector3 =
+				{
+					math.cos_f32(f32(ind) * 2.0 * rl.PI / 7.0),
+					0,
+					math.sin_f32(f32(ind) * 2.0 * rl.PI / 7.0),
+				} *
+				0.1
+			item_model := item_get_model(w, it.item)
+			rl.DrawModelEx(item_model, e.position + angle_off, {0, 0, 1}, 0, {1, 1, 1}, rl.WHITE)
+		}
 	}
 }
 
