@@ -11,6 +11,8 @@ EntityKind :: enum {
 	FRIDGE,
 	LIZARD_HAND,
 	CONTRUCTION_SITE,
+	SHROOM_BOX,
+	MAYO_JAR,
 }
 
 Entity :: struct {
@@ -47,7 +49,11 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 	case .CONTRUCTION_SITE:
 		recipe_try_add_ingredient(w, &w.current_recipe, w.player.held_item)
 		player_hold_item(&w.player, w, .NONE)
+	case .SHROOM_BOX:
+
+	case .MAYO_JAR:
 	}
+	
 }
 
 draw_entity :: proc(w: ^World, e: ^Entity) {
@@ -134,6 +140,10 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 		)
 
 	case .CONTRUCTION_SITE:
+
+	case .SHROOM_BOX:
+
+	case .MAYO_JAR:
 	}
 }
 

@@ -21,6 +21,10 @@ Assets :: struct {
 	dragon_scale_model:         rl.Model,
 	plane_model:                rl.Model,
 	świetlówka_model:           rl.Model,
+	spoon_model:				rl.Model,
+	mayo_model:					rl.Model,
+	shroom_model:				rl.Model,
+	shroombox_model:			rl.Model,
 	radio_music:                rl.Music,
 	good_ingredient_sound:      rl.Sound,
 	bad_ingredient_sound:       rl.Sound,
@@ -88,6 +92,18 @@ init_assets :: proc(a: ^Assets) {
 
 	a.good_ingredient_sound = rl.LoadSound("res/sounds/correct_ingridient.mp3")
 	a.bad_ingredient_sound = rl.LoadSound("res/sounds/bad_ingridient.mp3")
+
+	a.spoon_model = rl.LoadModel("res/models/lyzka.glb")
+	assign_shader_to_model(a.hud_diffuse_shader, &a.spoon_model)
+
+	a.mayo_model = rl.LoadModel("res/models/sloik.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.mayo_model)
+
+	a.shroombox_model = rl.LoadModel("res/models/mushroom_box.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.shroombox_model)
+
+	a.shroom_model = rl.LoadModel("res/models/mushroom_solo.glb")
+	assign_shader_to_model(a.hud_diffuse_shader, &a.shroom_model)
 }
 
 deinit_assets :: proc(a: ^Assets) {
@@ -105,6 +121,10 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadModel(a.lizard_hand_model)
 	rl.UnloadModel(a.dragon_scale_model)
 	rl.UnloadModel(a.świetlówka_model)
+	rl.UnloadModel(a.spoon_model)
+	rl.UnloadModel(a.mayo_model)
+	rl.UnloadModel(a.shroombox_model)
+	rl.UnloadModel(a.shroom_model)
 	rl.UnloadMusicStream(a.radio_music)
 	rl.UnloadSound(a.good_ingredient_sound)
 	rl.UnloadSound(a.bad_ingredient_sound)
