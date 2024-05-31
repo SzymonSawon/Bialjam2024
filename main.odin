@@ -22,7 +22,6 @@ main :: proc() {
 	rl.InitAudioDevice()
 	defer rl.CloseAudioDevice()
 
-    sk: SceneKind = .GAMEPLAY
 
 	rl.SetTargetFPS(120)
 	rl.DisableCursor()
@@ -39,12 +38,12 @@ main :: proc() {
 
 
 
-        update_world(&world, dt, &sk)
+        update_world(&world, dt)
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
-        switch sk {
+        switch world.sk {
             case .GAME_OVER:
-                game_over_scene(&sk)
+                game_over_scene(&world.sk)
             case .MENU:
             case .GAMEPLAY:
         }     

@@ -71,7 +71,7 @@ init_world :: proc(w: ^World) {
 	w.come_to_window_time = w.now + 5
 
 	w.current_round_time = 0
-
+    w.sk = .GAMEPLAY
 	rl.PlayMusicStream(w.assets.radio_music)
 }
 
@@ -81,10 +81,10 @@ deinit_world :: proc(w: ^World) {
 	delete(w.entities)
 }
 
-update_world :: proc(w: ^World, dt: f32, sk: ^SceneKind) {
+update_world :: proc(w: ^World, dt: f32) {
 	w.now += dt
 	if w.now - w.start_round_time >= w.start_round_time + w.max_round_time {
-		sk^ = .GAME_OVER
+		w.sk = .GAME_OVER
 		fmt.printfln("you lost")
 	}
 	if !recipe_is_done(&w.current_recipe) {

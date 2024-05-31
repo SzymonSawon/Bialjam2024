@@ -47,7 +47,7 @@ draw_3d_hud :: proc(w: ^World, dt: f32) {
 		)
 	}
 
-	if !w.slime_has_awakened {
+	if !w.slime_has_awakened || w.sk == .GAME_OVER{
         rl.DrawText(
             rl.TextFormat("Time left: %f", 0.0),
             auto_cast (screen_size.x - 100),
