@@ -13,7 +13,7 @@ menu_scene :: proc(w: ^World) {
 		w.should_quit = true
 	}
 
-	rl.DrawText("Game by: [WIP] for Bialjam 2024", 10, auto_cast screen_size.y - 30, 20, rl.WHITE)
+	rl.DrawText("Game by: Team Blue for Bialjam 2024", 10, auto_cast screen_size.y - 30, 20, rl.WHITE)
 }
 
 game_over_scene :: proc(w: ^World) {
