@@ -24,6 +24,9 @@ main :: proc() {
 	defer deinit_world(&world)
 
 	for !rl.WindowShouldClose() {
+        if rl.IsKeyPressed(.F11) {
+            rl.ToggleFullscreen()
+        }
 		dt := rl.GetFrameTime()
 		update_world(&world, dt)
 
