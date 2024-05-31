@@ -135,14 +135,6 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 		)
 	case .LIZARD_HAND:
 		rl.DrawModelEx(
-			w.assets.portal_model,
-			e.position + {0, 0, -0.3},
-			{1, 0, 0},
-			-90,
-			{1, 1, 1},
-			rl.WHITE,
-		)
-		rl.DrawModelEx(
 			w.assets.lizard_hand_model,
 			e.position + {0, 0, 0.1},
 			{0, 1, 0},
@@ -230,7 +222,7 @@ make_entity_fridge :: proc() -> Entity {
 }
 
 make_entity_lizard_hand :: proc() -> Entity {
-	return Entity{kind = .LIZARD_HAND, position = {-0.5, 0.5, -0.4}, size = {0.2, 0.2, 0.3}}
+	return Entity{kind = .LIZARD_HAND, position = {-0.5, 0.5, -0.4}, size = {0.2, 0.2, 0.5}}
 }
 
 make_entity_shroom_box :: proc() -> Entity {
