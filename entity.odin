@@ -9,6 +9,7 @@ EntityKind :: enum {
 	TENTACLE,
 	SLIME,
 	FRIDGE,
+	LIZARD_HAND,
 	CONTRUCTION_SITE,
 }
 
@@ -41,6 +42,8 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 	case .SLIME:
 	case .FRIDGE:
 		player_hold_item(&w.player, w, .UNICORN_BONES)
+	case .LIZARD_HAND:
+		player_hold_item(&w.player, w, .CHINESE_SCALE)
 	case .CONTRUCTION_SITE:
 		recipe_try_add_ingredient(w, &w.current_recipe, w.player.held_item)
 		player_hold_item(&w.player, w, .NONE)
@@ -113,6 +116,24 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 			{1, 1, 1},
 			rl.WHITE,
 		)
+	case .LIZARD_HAND:
+		rl.DrawModelEx(
+			w.assets.portal_model,
+			e.position + {0, 0, -0.3},
+			{1, 0, 0},
+			-90,
+			{1, 1, 1},
+			rl.WHITE,
+		)
+		rl.DrawModelEx(
+			w.assets.lizard_hand_model,
+			e.position + {0,0,0.1},
+			{0, 1, 0},
+			-90,
+			{1, 1, 1},
+			rl.WHITE,
+		)
+
 	case .CONTRUCTION_SITE:
 	}
 }
@@ -131,6 +152,10 @@ make_entity_slime :: proc() -> Entity {
 
 make_entity_fridge :: proc() -> Entity {
 	return Entity{kind = .FRIDGE, position = {1.045, 0.5, -0.1}, size = {0.4, 0.2, 1}}
+}
+
+make_entity_lizard_hand :: proc() -> Entity {
+	return Entity{kind = .LIZARD_HAND, position = {-0.5, 0.5, -0.4}, size = {0.2, 0.2, 0.3}}
 }
 
 make_entity_construction_site :: proc() -> Entity {

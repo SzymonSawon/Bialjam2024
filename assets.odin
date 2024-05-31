@@ -16,6 +16,9 @@ Assets :: struct {
 	slime_model:                rl.Model,
 	fridge_model:               rl.Model,
 	fridge_bones_model:         rl.Model,
+	unicorn_bones_model:        rl.Model,
+	lizard_hand_model:          rl.Model,
+	dragon_scale_model:         rl.Model,
 	plane_model:                rl.Model,
 	świetlówka_model:           rl.Model,
 	radio_music:                rl.Music,
@@ -59,6 +62,19 @@ init_assets :: proc(a: ^Assets) {
 	a.fridge_bones_model = rl.LoadModel("res/models/fridge_bones.glb")
 	assign_shader_to_model(a.hori_wobble_diffuse_shader, &a.fridge_bones_model)
 
+	a.unicorn_bones_model = rl.LoadModel("res/models/ucnicorn_bone.glb")
+	a.unicorn_bones_model.transform =
+		rl.MatrixScale(0.6, 0.6, 0.6) *
+		rl.MatrixRotateXYZ({-rl.PI / 6, rl.PI / 4, 0}) *
+		rl.MatrixTranslate(0, 0.1, 0)
+	assign_shader_to_model(a.hud_diffuse_shader, &a.unicorn_bones_model)
+
+	a.lizard_hand_model = rl.LoadModel("res/models/lizard_hand.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.lizard_hand_model)
+
+	a.dragon_scale_model = rl.LoadModel("res/models/scale.glb")
+	assign_shader_to_model(a.hud_diffuse_shader, &a.dragon_scale_model)
+
 	a.plane_model = rl.LoadModel("res/models/plane.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.plane_model)
 
@@ -81,8 +97,11 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadModel(a.slime_model)
 	rl.UnloadModel(a.fridge_model)
 	rl.UnloadModel(a.fridge_bones_model)
+	rl.UnloadModel(a.unicorn_bones_model)
+	rl.UnloadModel(a.lizard_hand_model)
+	rl.UnloadModel(a.dragon_scale_model)
 	rl.UnloadModel(a.świetlówka_model)
-    rl.UnloadMusicStream(a.radio_music)
-    rl.UnloadSound(a.good_ingredient_sound)
-    rl.UnloadSound(a.bad_ingredient_sound)
+	rl.UnloadMusicStream(a.radio_music)
+	rl.UnloadSound(a.good_ingredient_sound)
+	rl.UnloadSound(a.bad_ingredient_sound)
 }
