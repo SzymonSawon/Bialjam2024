@@ -4,6 +4,12 @@ import "core:fmt"
 import "core:math"
 import rl "vendor:raylib"
 
+SceneKind :: enum {
+	GAME_OVER,
+	MENU,
+	GAMEPLAY,
+}
+
 World :: struct {
 	now:                 f32,
 	assets:              Assets,
@@ -27,17 +33,41 @@ World :: struct {
 	max_round_time:      f32,
 	score:               f32,
 	sk:                  SceneKind,
+	should_quit:         bool,
 }
 
 init_world :: proc(w: ^World) {
+    w.now = 0
+	w.should_quit = false
+
 	init_assets(&w.assets)
 
-	w.main_camera = rl.Camera3D {
-		up         = {0, 1, 0},
-		position   = {0, 1, 0},
-		target     = {0, 1, 1},
-		fovy       = 80,
-		projection = .PERSPECTIVE,
+	when ODIN_DEBUG {
+		w.sk = .GAMEPLAY
+        rl.DisableCursor()
+	} else {
+		w.sk = .MENU
+	}
+
+	#partial switch w.sk {
+	case .GAME_OVER:
+		fallthrough
+	case .GAMEPLAY:
+		w.main_camera = rl.Camera3D {
+			up         = {0, 1, 0},
+			position   = {0, 1, 0},
+			target     = {1, 1, 0},
+			fovy       = 80,
+			projection = .PERSPECTIVE,
+		}
+	case .MENU:
+		w.main_camera = rl.Camera3D {
+			up         = {0, 1, 0},
+			position   = {2, 4, 6},
+			target     = {-0.2, -.2, -1},
+			fovy       = 80,
+			projection = .PERSPECTIVE,
+		}
 	}
 
 	w.hud_camera = rl.Camera3D {
@@ -49,6 +79,8 @@ init_world :: proc(w: ^World) {
 	}
 
 	init_player(&w.player)
+
+    w.targetted_entity = nil
 
 	append(&w.entities, make_entity_tentacle())
 	append(&w.entities, make_entity_slime())
@@ -66,41 +98,48 @@ init_world :: proc(w: ^World) {
 	w.recipe_layer = rl.LoadRenderTexture(RECIPE_LAYER_SIZE, RECIPE_LAYER_SIZE)
 	w.assets.plane_model.materials[1].maps[0].texture = w.recipe_layer.texture
 
+    w.slime_has_awakened = false
 	w.max_round_time = 15
 	w.current_recipe = make_recipe(w)
 	w.come_to_window_time = w.now + 5
+    w.last_screen_size = {0, 0}
+    w.score = 0
+    w.round_number = 0
+    w.start_round_time = 0
 
 	w.current_round_time = 0
-    w.sk = .GAMEPLAY
 	rl.PlayMusicStream(w.assets.radio_music)
 }
 
 deinit_world :: proc(w: ^World) {
 	deinit_assets(&w.assets)
 	rl.UnloadRenderTexture(w.recipe_layer)
-	delete(w.entities)
+	rl.UnloadRenderTexture(w.hud_layer)
+	rl.UnloadRenderTexture(w.world_layer)
+	clear(&w.entities)
 }
 
 update_world :: proc(w: ^World, dt: f32) {
 	w.now += dt
-	if w.round_number > 1 && w.now - w.start_round_time >= w.start_round_time + w.max_round_time {
-		w.sk = .GAME_OVER
-		fmt.printfln("you lost")
+	if w.round_number > 1 && w.now - w.start_round_time >= w.max_round_time {
+		world_set_scene(w, .GAME_OVER)
 	}
-    if w.come_to_window_time <= w.now && !w.slime_has_awakened {
-        w.slime_has_awakened = true
-        rl.PlaySound(w.assets.ding_sound)
-        w.round_number += 1
-        w.start_round_time = w.now
-    }
-    if recipe_is_done(&w.current_recipe) {
-        w.come_to_window_time = w.now + 5
-        w.slime_has_awakened = false
-        w.current_recipe = make_recipe(w)
-        w.max_round_time -= 1
-        w.score += f32(w.current_recipe.ingredients_count) * math.max(0,(w.max_round_time - (w.now - w.start_round_time)))
-        w.start_round_time = w.now
-    }
+	if w.come_to_window_time <= w.now && !w.slime_has_awakened {
+		w.slime_has_awakened = true
+		rl.PlaySound(w.assets.ding_sound)
+		w.round_number += 1
+		w.start_round_time = w.now
+	}
+	if recipe_is_done(&w.current_recipe) {
+		w.come_to_window_time = w.now + 5
+		w.slime_has_awakened = false
+		w.current_recipe = make_recipe(w)
+		w.max_round_time -= 1
+		w.score +=
+			f32(w.current_recipe.ingredients_count) *
+			math.max(0, (w.max_round_time - (w.now - w.start_round_time)))
+		w.start_round_time = w.now
+	}
 	update_player_movement(&w.player, dt)
 	update_main_camera(w)
 	update_entity_targetting(w)
@@ -222,4 +261,18 @@ update_entity_interaction :: proc(w: ^World) {
 	if (rl.IsMouseButtonPressed(.LEFT) && w.targetted_entity != nil) {
 		entity_interact(w, w.targetted_entity)
 	}
+}
+
+world_set_scene :: proc(w: ^World, sk: SceneKind) {
+	w.sk = sk
+	if sk == .GAMEPLAY {
+		rl.DisableCursor()
+	} else {
+		rl.EnableCursor()
+	}
+}
+
+world_reload :: proc(w: ^World) {
+    deinit_world(w)
+    init_world(w)
 }

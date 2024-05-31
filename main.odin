@@ -8,13 +8,6 @@ HEIGHT :: 900
 BACKGROUND :: rl.Color{0x18, 0x18, 0x18, 0xff}
 PIXELIZE :: 4
 
-SceneKind :: enum{
-    GAME_OVER,
-    MENU,
-    GAMEPLAY,
-}
-
-
 main :: proc() {
 	rl.InitWindow(WIDTH, HEIGHT, "InterdimensionalFoodTruck")
 	defer rl.CloseWindow()
@@ -24,29 +17,30 @@ main :: proc() {
 
 
 	rl.SetTargetFPS(120)
-	rl.DisableCursor()
 
 	world := World{}
 	init_world(&world)
 	defer deinit_world(&world)
 
-	for !rl.WindowShouldClose() {
-        if rl.IsKeyPressed(.F11) {
-            rl.ToggleFullscreen()
-        }
+	for !rl.WindowShouldClose() && !world.should_quit {
+		if rl.IsKeyPressed(.F11) {
+			rl.ToggleFullscreen()
+		}
 		dt := rl.GetFrameTime()
 
+        when ODIN_DEBUG {
+            if rl.IsKeyDown(.F) {
+                dt *= 10
+            }
+        }
 
+        if(world.sk == .GAMEPLAY) {
+            update_world(&world, dt)
+        }
 
-        update_world(&world, dt)
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
-        switch world.sk {
-            case .GAME_OVER:
-                game_over_scene(&world.sk)
-            case .MENU:
-            case .GAMEPLAY:
-        }     
+
 		update_render_textures(&world)
 
 		{
@@ -59,23 +53,36 @@ main :: proc() {
 			defer rl.EndTextureMode()
 			draw_world(&world, dt)
 		}
+
 		{
-			rl.BeginTextureMode(world.hud_layer)
-			defer rl.EndTextureMode()
-			draw_3d_hud(&world, dt)
-		}
-
-
-
-        {
 			rl.BeginShaderMode(world.assets.postprocess_shader)
 			defer rl.EndShaderMode()
 			rl.DrawTextureEx(world.world_layer.texture, {0, 0}, 0, PIXELIZE, rl.WHITE)
-			rl.DrawTextureEx(world.hud_layer.texture, {0, 0}, 0, PIXELIZE, rl.WHITE)
 		}
+
+		switch world.sk {
+        case .GAMEPLAY:
+            {
+                rl.BeginTextureMode(world.hud_layer)
+                defer rl.EndTextureMode()
+                draw_3d_hud(&world, dt)
+            }
+            {
+                rl.BeginShaderMode(world.assets.postprocess_shader)
+                defer rl.EndShaderMode()
+                rl.DrawTextureEx(world.hud_layer.texture, {0, 0}, 0, PIXELIZE, rl.WHITE)
+            }
+        case .MENU:
+			menu_scene(&world)
+        case .GAME_OVER:
+			game_over_scene(&world)
+		}
+
 
 		when ODIN_DEBUG {
 			rl.DrawFPS(10, 10)
 		}
 	}
+
+    rl.EnableCursor()
 }
