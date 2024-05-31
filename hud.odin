@@ -48,13 +48,6 @@ draw_3d_hud :: proc(w: ^World, dt: f32) {
 	}
 
 	if !w.slime_has_awakened {
-		rl.DrawText(
-			rl.TextFormat("Time left: %f", 0.0),
-			auto_cast (screen_size.x - 100),
-			auto_cast (screen_size.y - 20),
-			10,
-			rl.RED,
-		)
 	} else {
 		if w.now - w.start_round_time < 2.5 {
 			rl.DrawTextureEx(
@@ -75,19 +68,47 @@ draw_3d_hud :: proc(w: ^World, dt: f32) {
 				},
 			)
 		}
+		draw_timer(w, screen_size, (w.now - w.start_round_time) / w.max_round_time)
+	}
+	rl.DrawRectangleRounded(
+		rl.Rectangle{auto_cast screen_size.x - 90, 20, 70, 30},
+		0.2,
+		3,
+		rl.GetColor(0x3E2B19ff),
+	)
+	rl.DrawRectangleRounded(
+		rl.Rectangle{auto_cast screen_size.x - 85, 25, 60, 20},
+		0.2,
+		3,
+		rl.GetColor(0xE7E1CFff),
+	)
+	{
+		text_width := rl.MeasureText(rl.TextFormat("%d", cast(i32)w.score), 10)
 		rl.DrawText(
-			rl.TextFormat("Time left: %f", w.max_round_time - (w.now - w.start_round_time)),
-			auto_cast (screen_size.x - 100),
-			auto_cast (screen_size.y - 20),
+			rl.TextFormat("%d", cast(i32)w.score),
+			cast(i32)screen_size.x - 80 + (50 - text_width),
+			30,
 			10,
-			rl.RED,
+			rl.BLACK,
 		)
 	}
-	rl.DrawText(
-		rl.TextFormat("Score: %f", w.score),
-		auto_cast (screen_size.x - 100),
-		auto_cast (screen_size.y - 40),
-		10,
-		rl.GREEN,
+}
+
+draw_timer :: proc(w: ^World, screen_size: rl.Vector2, t: f32) {
+	rl.DrawTextureEx(w.assets.timer_sprite, {20, 20}, 0, 0.3, rl.WHITE)
+	rl.DrawCircleV(
+		{20, 20} +
+		{auto_cast w.assets.timer_sprite.width, auto_cast w.assets.timer_sprite.height} * 0.15,
+		auto_cast w.assets.timer_sprite.width * 0.08,
+		rl.GetColor(0xE7E1CFff),
+	)
+	rl.DrawCircleSector(
+		{20, 20} +
+		{auto_cast w.assets.timer_sprite.width, auto_cast w.assets.timer_sprite.height} * 0.15,
+		auto_cast w.assets.timer_sprite.width * 0.07,
+		-90 + 360 * t,
+		270,
+		16,
+		rl.RED,
 	)
 }

@@ -31,6 +31,7 @@ Assets :: struct {
 	radio_music:                rl.Music,
 	smoke_sprite:               rl.Texture,
 	bell_sprite:                rl.Texture,
+	timer_sprite:               rl.Texture,
 	good_ingredient_sound:      rl.Sound,
 	bad_ingredient_sound:       rl.Sound,
 	ding_sound:                 rl.Sound,
@@ -126,6 +127,8 @@ init_assets :: proc(a: ^Assets) {
 	a.smoke_sprite = rl.LoadTexture("res/sprites/magic_smoke.png")
 
 	a.bell_sprite = rl.LoadTexture("res/sprites/bell.png")
+
+	a.timer_sprite = rl.LoadTexture("res/sprites/timer.png")
 }
 
 deinit_assets :: proc(a: ^Assets) {
@@ -152,6 +155,7 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadModel(a.wrap_model)
 	rl.UnloadTexture(a.smoke_sprite)
 	rl.UnloadTexture(a.bell_sprite)
+	rl.UnloadTexture(a.timer_sprite)
 	rl.UnloadMusicStream(a.radio_music)
 	rl.UnloadSound(a.good_ingredient_sound)
 	rl.UnloadSound(a.bad_ingredient_sound)
