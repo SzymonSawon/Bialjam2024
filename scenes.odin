@@ -6,6 +6,11 @@ import rl "vendor:raylib"
 menu_scene :: proc(w: ^World) {
 	screen_size := rl.Vector2{auto_cast rl.GetRenderWidth(), auto_cast rl.GetRenderHeight()}
 
+    rl.DrawRectangle(0,0,200, 100, rl.BLACK);
+    rl.DrawText("Interdimensional", 60, 30, 30, rl.WHITE);
+    rl.DrawText("Foodtruck", 60, 65, 30, rl.WHITE);
+    rl.DrawText("Simulator", 60, 100, 30, rl.WHITE);
+
 	if (gui_button({screen_size.x / 4, screen_size.y / 2 - 10}, "Play")) {
 		world_set_scene(w, .GAMEPLAY)
 	}
