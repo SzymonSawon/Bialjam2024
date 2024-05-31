@@ -158,7 +158,12 @@ draw_world :: proc(w: ^World, dt: f32) {
 }
 
 update_render_textures :: proc(w: ^World) {
-	screen_size := rl.Vector2{auto_cast rl.GetScreenWidth(), auto_cast rl.GetScreenHeight()}
+    when ODIN_OS == .Darwin {
+        screen_size := rl.Vector2{auto_cast rl.GetScreenWidth(), auto_cast rl.GetScreenHeight()}
+    } else {
+        screen_size :=
+            rl.Vector2{auto_cast rl.GetRenderWidth(), auto_cast rl.GetRenderHeight()}
+    }
 	if screen_size != w.last_screen_size {
 		w.last_screen_size = screen_size
 		rl.UnloadRenderTexture(w.world_layer)
