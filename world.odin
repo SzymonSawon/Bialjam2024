@@ -19,6 +19,8 @@ World :: struct {
 	current_recipe:      Recipe,
 	come_to_window_time: f32,
 	slime_has_awakened:  bool,
+	cursor_radius:     f32,
+	cursor_radius_t:     f32,
 }
 
 init_world :: proc(w: ^World) {
@@ -70,9 +72,9 @@ deinit_world :: proc(w: ^World) {
 update_world :: proc(w: ^World, dt: f32) {
 	w.now += dt
 	if w.come_to_window_time <= w.now && !w.slime_has_awakened {
-        w.slime_has_awakened = true
-        //TODO: add sound effect
-    }
+		w.slime_has_awakened = true
+		//TODO: add sound effect
+	}
 	update_player_movement(&w.player, dt)
 	update_main_camera(w)
 	update_entity_targetting(w)
@@ -119,6 +121,7 @@ draw_world :: proc(w: ^World, dt: f32) {
 	}
 
 	rl.DrawModel(w.assets.foodtruck_model, {0, 0, 0}, 1, rl.WHITE)
+	rl.DrawModel(w.assets.świetlówka_model, {0, 1.25, 0}, 0.3, rl.WHITE)
 
 	for &e in w.entities {
 		draw_entity(w, &e)
@@ -168,7 +171,7 @@ update_entity_targetting :: proc(w: ^World) {
 	for &e in w.entities {
 		e.targeted = false
 		hit := rl.GetRayCollisionBox(ray, entity_get_bounds(&e))
-		if hit.hit {
+		if hit.hit && hit.distance < MAX_REACH {
 			e.targeted = true
 			if w.targetted_entity == nil || closest_distance > hit.distance {
 				w.targetted_entity = &e

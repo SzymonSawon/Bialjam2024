@@ -5,6 +5,7 @@ import "core:math"
 import rl "vendor:raylib"
 
 SPEED :: 3
+MAX_REACH :: 1
 
 PLAYER_BOUNDS_MIN :: rl.Vector3{-1, 0, -0.5}
 PLAYER_BOUNDS_MAX :: rl.Vector3{0.7, 0, 0.4}

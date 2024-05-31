@@ -17,6 +17,7 @@ Assets :: struct {
 	fridge_model:               rl.Model,
 	fridge_bones_model:         rl.Model,
 	plane_model:                rl.Model,
+	świetlówka_model:           rl.Model,
 	radio_music:                rl.Music,
 	good_ingredient_sound:      rl.Sound,
 	bad_ingredient_sound:       rl.Sound,
@@ -61,6 +62,8 @@ init_assets :: proc(a: ^Assets) {
 	a.plane_model = rl.LoadModel("res/models/plane.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.plane_model)
 
+	a.świetlówka_model = rl.LoadModel("res/models/swietlowka.glb")
+
 	a.radio_music = rl.LoadMusicStream("res/radio/radio.mp3")
 
 	a.good_ingredient_sound = rl.LoadSound("res/sounds/correct_ingridient.mp3")
@@ -78,6 +81,7 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadModel(a.slime_model)
 	rl.UnloadModel(a.fridge_model)
 	rl.UnloadModel(a.fridge_bones_model)
+	rl.UnloadModel(a.świetlówka_model)
     rl.UnloadMusicStream(a.radio_music)
     rl.UnloadSound(a.good_ingredient_sound)
     rl.UnloadSound(a.bad_ingredient_sound)
