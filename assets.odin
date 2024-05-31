@@ -41,6 +41,7 @@ Assets :: struct {
 	good_ingredient_sound:      rl.Sound,
 	bad_ingredient_sound:       rl.Sound,
 	ding_sound:                 rl.Sound,
+	bober_laugh_sound:          rl.Sound,
 }
 
 assign_shader_to_model :: proc(s: rl.Shader, m: ^rl.Model) {
@@ -108,6 +109,8 @@ init_assets :: proc(a: ^Assets) {
 	a.bad_ingredient_sound = rl.LoadSound("res/sounds/bad_ingridient.mp3")
 
 	a.ding_sound = rl.LoadSound("res/sounds/ding.mp3")
+
+	a.bober_laugh_sound = rl.LoadSound("res/sounds/bober_laugh.mp3")
 
 	a.spoon_model = rl.LoadModel("res/models/lyzka.glb")
 	a.spoon_model.transform = rl.MatrixRotateXYZ({-rl.PI / 4, -6 * rl.PI / 4, 0})
@@ -184,4 +187,5 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadSound(a.good_ingredient_sound)
 	rl.UnloadSound(a.bad_ingredient_sound)
 	rl.UnloadSound(a.ding_sound)
+	rl.UnloadSound(a.bober_laugh_sound)
 }
