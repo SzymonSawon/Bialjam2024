@@ -46,11 +46,30 @@ draw_3d_hud :: proc(w: ^World, dt: f32) {
 			rl.GREEN,
 		)
 	}
+
+	if !w.slime_has_awakened {
+        rl.DrawText(
+            rl.TextFormat("Time left: %f", 0.0),
+            auto_cast (screen_size.x - 100),
+            auto_cast (screen_size.y - 20),
+            10,
+            rl.RED,
+        )
+    }
+    else{
+        rl.DrawText(
+            rl.TextFormat("Time left: %f", w.max_round_time - (w.now - w.start_round_time)),
+            auto_cast (screen_size.x - 100),
+            auto_cast (screen_size.y - 20),
+            10,
+            rl.RED,
+        )
+    }
     rl.DrawText(
-        rl.TextFormat("Time left: %f", w.max_round_time - (w.now - w.start_round_time)),
+        rl.TextFormat("Score: %f", w.score),
         auto_cast (screen_size.x - 100),
-        auto_cast (screen_size.y - 20),
+        auto_cast (screen_size.y - 40),
         10,
-        rl.RED,
+        rl.GREEN,
     )
 }

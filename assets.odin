@@ -27,10 +27,11 @@ Assets :: struct {
 	shroombox_model:            rl.Model,
 	eye_model:                  rl.Model,
 	bowl_model:                 rl.Model,
-	wrap_model:                  rl.Model,
+	wrap_model:                 rl.Model,
 	radio_music:                rl.Music,
 	good_ingredient_sound:      rl.Sound,
 	bad_ingredient_sound:       rl.Sound,
+	ding_sound:                  rl.Sound,
 }
 
 assign_shader_to_model :: proc(s: rl.Shader, m: ^rl.Model) {
@@ -96,6 +97,8 @@ init_assets :: proc(a: ^Assets) {
 	a.good_ingredient_sound = rl.LoadSound("res/sounds/correct_ingridient.mp3")
 	a.bad_ingredient_sound = rl.LoadSound("res/sounds/bad_ingridient.mp3")
 
+	a.ding_sound = rl.LoadSound("res/sounds/ding.mp3")
+
 	a.spoon_model = rl.LoadModel("res/models/lyzka.glb")
 	a.spoon_model.transform = rl.MatrixRotateXYZ({-rl.PI / 4, -6 * rl.PI / 4, 0})
 	assign_shader_to_model(a.hud_diffuse_shader, &a.spoon_model)
@@ -144,4 +147,5 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadMusicStream(a.radio_music)
 	rl.UnloadSound(a.good_ingredient_sound)
 	rl.UnloadSound(a.bad_ingredient_sound)
+	rl.UnloadSound(a.ding_sound)
 }

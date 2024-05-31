@@ -8,12 +8,21 @@ HEIGHT :: 900
 BACKGROUND :: rl.Color{0x18, 0x18, 0x18, 0xff}
 PIXELIZE :: 4
 
+SceneKind :: enum{
+    GAME_OVER,
+    MENU,
+    GAMEPLAY,
+}
+
+
 main :: proc() {
 	rl.InitWindow(WIDTH, HEIGHT, "InterdimensionalFoodTruck")
 	defer rl.CloseWindow()
 
 	rl.InitAudioDevice()
 	defer rl.CloseAudioDevice()
+
+    sk: SceneKind = .GAMEPLAY
 
 	rl.SetTargetFPS(120)
 	rl.DisableCursor()
@@ -27,11 +36,18 @@ main :: proc() {
             rl.ToggleFullscreen()
         }
 		dt := rl.GetFrameTime()
-		update_world(&world, dt)
 
+
+
+        update_world(&world, dt, &sk)
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
-
+        switch sk {
+            case .GAME_OVER:
+                game_over_scene(&sk)
+            case .MENU:
+            case .GAMEPLAY:
+        }     
 		update_render_textures(&world)
 
 		{
