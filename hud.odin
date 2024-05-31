@@ -46,4 +46,11 @@ draw_3d_hud :: proc(w: ^World, dt: f32) {
 			rl.GREEN,
 		)
 	}
+    rl.DrawText(
+        rl.TextFormat("Time left: %f", w.max_round_time - (w.now - w.start_round_time)),
+        auto_cast (screen_size.x - 100),
+        auto_cast (screen_size.y - 20),
+        10,
+        rl.RED,
+    )
 }

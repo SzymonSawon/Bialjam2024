@@ -87,17 +87,16 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 		)
 	case .SLIME:
 		time_since_change := w.now - w.come_to_window_time
-		change_offset := (1 - math.min(1, (time_since_change / 0.2))) * -0.5
-		rl.DrawModelEx(
-			w.assets.slime_model,
-			e.position + {0, 0 + change_offset , 1.5 - change_offset},
-			{1, 0, 0},
-			0,
-			{1, 1, 1},
-			rl.WHITE,
-		)
-		rl.DrawModel(w.assets.plane_model, e.position + {0.3, 0 + change_offset, 1.28 - change_offset}, 1, rl.WHITE)
-
+        change_offset := (1 - math.min(1, (time_since_change / 0.2))) * -0.5
+        rl.DrawModelEx(
+            w.assets.slime_model,
+            e.position + {0, 0 + change_offset , 1.5 - change_offset},
+            {1, 0, 0},
+            0,
+            {1, 1, 1},
+            rl.WHITE,
+        )
+        rl.DrawModel(w.assets.plane_model, e.position + {0.3, 0 + change_offset, 1.28 - change_offset}, 1, rl.WHITE)
 	case .FRIDGE:
 		rl.DrawModelEx(
 			w.assets.fridge_model,

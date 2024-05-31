@@ -21,6 +21,9 @@ World :: struct {
 	slime_has_awakened:  bool,
 	cursor_radius:     f32,
 	cursor_radius_t:     f32,
+	current_round_time:  f32,
+	start_round_time:  f32,
+	max_round_time:      f32,
 }
 
 init_world :: proc(w: ^World) {
@@ -56,10 +59,12 @@ init_world :: proc(w: ^World) {
 
 	w.recipe_layer = rl.LoadRenderTexture(RECIPE_LAYER_SIZE, RECIPE_LAYER_SIZE)
 	w.assets.plane_model.materials[1].maps[0].texture = w.recipe_layer.texture
-
+    
+    w.max_round_time = 8
 	w.current_recipe = make_recipe()
-
 	w.come_to_window_time = w.now + 5
+    
+    w.current_round_time = 0
 
 	rl.PlayMusicStream(w.assets.radio_music)
 }
@@ -72,9 +77,22 @@ deinit_world :: proc(w: ^World) {
 
 update_world :: proc(w: ^World, dt: f32) {
 	w.now += dt
+    if w.now - w.start_round_time >= w.start_round_time + w.max_round_time {
+        fmt.printfln("you lost")
+    }
+	if !recipe_is_done(&w.current_recipe) {
+		w.current_round_time = w.now
+	}
 	if w.come_to_window_time <= w.now && !w.slime_has_awakened {
 		w.slime_has_awakened = true
 		//TODO: add sound effect
+	}
+	if recipe_is_done(&w.current_recipe) {
+		w.come_to_window_time = w.now + 5
+		w.slime_has_awakened = true
+		w.current_recipe = make_recipe()
+        w.max_round_time -= 1
+        w.start_round_time = w.now
 	}
 	update_player_movement(&w.player, dt)
 	update_main_camera(w)
