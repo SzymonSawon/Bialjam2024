@@ -25,6 +25,7 @@ Assets :: struct {
 	spoon_model:                rl.Model,
 	mayo_model:                 rl.Model,
 	shroom_model:               rl.Model,
+	tv_model:                   rl.Model,
 	shroombox_model:            rl.Model,
 	eye_model:                  rl.Model,
 	bowl_model:                 rl.Model,
@@ -55,10 +56,7 @@ init_assets :: proc(a: ^Assets) {
 		"res/shaders/vertex_wobble_horizontal.glsl",
 		"res/shaders/diffuse.glsl",
 	)
-	a.skycube_shader = rl.LoadShader(
-		"res/shaders/vertex.glsl",
-		"res/shaders/skycube.glsl",
-	)
+	a.skycube_shader = rl.LoadShader("res/shaders/vertex.glsl", "res/shaders/skycube.glsl")
 
 	a.foodtruck_model = rl.LoadModel("res/models/foodtruck.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.foodtruck_model)
@@ -138,6 +136,9 @@ init_assets :: proc(a: ^Assets) {
 	a.button_model = rl.LoadModel("res/models/button.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.button_model)
 
+	a.tv_model = rl.LoadModel("res/models/tv.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.tv_model)
+
 	a.smoke_sprite = rl.LoadTexture("res/sprites/magic_smoke.png")
 
 	a.bell_sprite = rl.LoadTexture("res/sprites/bell.png")
@@ -168,6 +169,7 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadModel(a.shroom_model)
 	rl.UnloadModel(a.eye_model)
 	rl.UnloadModel(a.bowl_model)
+	rl.UnloadModel(a.tv_model)
 	rl.UnloadModel(a.wrap_model)
 	rl.UnloadTexture(a.smoke_sprite)
 	rl.UnloadTexture(a.bell_sprite)

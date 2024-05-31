@@ -137,7 +137,9 @@ update_world :: proc(w: ^World, dt: f32) {
 		w.come_to_window_time = w.now + 5
 		w.slime_has_awakened = false
 		w.current_recipe = make_recipe(w)
-		w.max_round_time -= 1
+        if w.max_round_time > 6 {
+            w.max_round_time -= 0.5
+        }
 		w.score +=
 			f32(w.current_recipe.ingredients_count) *
 			math.max(0, (w.max_round_time - (w.now - w.start_round_time)))

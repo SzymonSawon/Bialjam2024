@@ -15,6 +15,7 @@ EntityKind :: enum {
 	MAYO_JAR,
 	EYE_BOWL,
 	GRAV_STABILIZER,
+    TV,
 }
 
 Entity :: struct {
@@ -58,7 +59,11 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 	case .EYE_BOWL:
 		player_hold_item(&w.player, w, .EYE_OF_CTHULU)
 	case .GRAV_STABILIZER:
-		w.grav_stabilty = 30
+        w.grav_stabilty = 30
+        if w.grav_stabilty > 8 {
+            w.grav_stabilty = 30.0 - f32(w.round_number)
+        }
+	case .TV:
 	}
 
 }
@@ -174,7 +179,15 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 			{1, 1, 1},
 			rl.WHITE,
 		)
-
+    case .TV:
+		rl.DrawModelEx(
+			w.assets.tv_model,
+			e.position + {0, 0, 0},
+			{0, 0, 1},
+			0,
+			{1, 1, 1},
+			rl.WHITE,
+		)
 	case .CONTRUCTION_SITE:
 		if w.slime_has_awakened {
 			rl.DrawModelEx(
@@ -255,6 +268,11 @@ make_entity_eye_bowl :: proc() -> Entity {
 
 make_entity_construction_site :: proc() -> Entity {
 	return Entity{kind = .CONTRUCTION_SITE, position = {0, 0.7, 0.4}, size = {0.5, 0.2, 0.5}}
+}
+
+
+make_entity_tv :: proc() -> Entity {
+	return Entity{kind = .TV, position = {0, 0.7, 0.4}, size = {0.5, 0.2, 0.5}}
 }
 
 make_entity_grav_stabilizer :: proc() -> Entity {
