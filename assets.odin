@@ -104,7 +104,7 @@ init_assets :: proc(a: ^Assets) {
 
 	a.świetlówka_model = rl.LoadModel("res/models/swietlowka.glb")
 
-	a.radio_music = rl.LoadMusicStream("res/radio/radio.mp3")
+	a.radio_music = rl.LoadMusicStream("res/radio/new_radio.mp3")
 
 	a.good_ingredient_sound = rl.LoadSound("res/sounds/correct_ingridient.mp3")
 	a.bad_ingredient_sound = rl.LoadSound("res/sounds/bad_ingridient.mp3")
