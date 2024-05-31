@@ -150,7 +150,7 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 	case .LIZARD_HAND:
 		rl.DrawModelEx(
 			w.assets.lizard_hand_model,
-			e.position + {0, 0, 0.1},
+			e.position + {0, 0, -0.4},
 			{0, 1, 0},
 			-90,
 			{1, 1, 1},
