@@ -348,15 +348,16 @@ update_entity_targetting :: proc(w: ^World) {
 	w.targetted_entity = nil
 	closest_distance: f32 = 0
 	for &e in w.entities {
-		e.targeted = false
 		hit := rl.GetRayCollisionBox(ray, entity_get_bounds(&e))
 		if hit.hit && hit.distance < MAX_REACH {
-			e.targeted = true
 			if w.targetted_entity == nil || closest_distance > hit.distance {
 				w.targetted_entity = &e
 				closest_distance = hit.distance
 			}
 		}
+	}
+	for &e in w.entities {
+		e.targeted = &e == w.targetted_entity
 	}
 }
 
