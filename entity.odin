@@ -53,6 +53,9 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 	case .LIZARD_HAND:
 		player_hold_item(&w.player, w, .CHINESE_SCALE)
 	case .CONTRUCTION_SITE:
+        if !w.slime_has_awakened {
+            return
+        }
 		recipe_try_add_ingredient(w, &w.current_recipe, w.player.held_item)
         if recipe_is_done(&w.current_recipe){
             player_hold_item(&w.player, w, .ROLLO)
