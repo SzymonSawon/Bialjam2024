@@ -34,6 +34,9 @@ player_get_forward :: proc(p: ^Player) -> rl.Vector3 {
 }
 
 player_hold_item :: proc(p: ^Player, w: ^World, it: Item) {
+    if p.held_item == .ROLLO && it != .NONE {
+        return
+    }
 	p.held_item = it
     p.held_item_change_time = w.now
 }
