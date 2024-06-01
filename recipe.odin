@@ -20,9 +20,12 @@ Recipe :: struct {
 make_recipe :: proc(w: ^World) -> Recipe {
 	recipe := Recipe{}
 	recipe.ingredients_count =
-	auto_cast rl.GetRandomValue(
-		i32(math.ceil(f32(w.round_number + 2) / 3)),
-		i32(math.ceil(f32(w.round_number + 1) / 2)),
+	auto_cast math.min(
+		rl.GetRandomValue(
+			i32(math.ceil(f32(w.round_number + 2) / 3)),
+			i32(math.ceil(f32(w.round_number + 1) / 2)),
+		),
+		6,
 	)
 	for i := 0; i < recipe.ingredients_count; i += 1 {
 		recipe.ingredients[i].item = (auto_cast rl.GetRandomValue(1, 6))
