@@ -1,6 +1,7 @@
 package truck
 
 import "core:fmt"
+import "core:math"
 import rl "vendor:raylib"
 
 intro_scene :: proc(w: ^World, dt: f32) {
@@ -79,7 +80,7 @@ game_over_scene :: proc(w: ^World) {
 	}
 
 	{
-		message:=rl.TextFormat("your score was: %d", cast(i32)w.score) 
+		message:=rl.TextFormat("your score was: %d", math.max(cast(i32)w.score, 0)) 
 		width := rl.MeasureText(message, 30)
 		rl.DrawText(message, auto_cast screen_size.x / 2 - width / 2, auto_cast screen_size.y / 2 - 50, 30, rl.WHITE)
 	}

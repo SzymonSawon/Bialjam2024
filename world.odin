@@ -158,7 +158,8 @@ update_world :: proc(w: ^World, dt: f32) {
 	w.now += dt
 	if w.round_number > 1 &&
 	   (       w.grav_stabilty < -6 ||
-			   w.grav_stabilty < -10) {
+			   w.grav_stabilty < -10 ||
+               w.score < 0) {
 		world_set_scene(w, .GAME_OVER)
        }
     if w.round_number > 1 &&
@@ -177,7 +178,7 @@ update_world :: proc(w: ^World, dt: f32) {
         else{
             w.is_wrap_wrapped = true
             w.count_rollos = 1
-            w.score -= (f32(w.current_recipe.ingredients_count) - f32(w.count_ingredients)) * 3
+            w.score -= (f32(w.current_recipe.ingredients_count) - f32(w.count_ingredients)) * 10 + 5
             w.count_ingredients = 0
             w.player.held_item = nil
         }
@@ -200,9 +201,11 @@ update_world :: proc(w: ^World, dt: f32) {
 		if w.max_round_time > 6 {
 			w.max_round_time -= 0.5
 		}
-		w.score +=
-			f32(w.current_recipe.ingredients_count) *
-			math.max(0, (w.max_round_time - (w.now - w.start_round_time)))
+        if w.count_ingredients > 0 {
+            w.score +=
+                f32(w.current_recipe.ingredients_count) *
+                math.max(0, (w.max_round_time - (w.now - w.start_round_time)))
+        }
 		w.start_round_time = w.now
 		w.is_wrap_wrapped = true
 	}
