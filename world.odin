@@ -36,6 +36,8 @@ World :: struct {
 	should_quit:         bool,
 	grav_stabilty:       f32,
 	bober_arrives_time:  f32,
+	is_wrap_wrapped:     bool,
+	count_rollos:        int,
 }
 
 init_world :: proc(w: ^World) {
@@ -111,9 +113,13 @@ init_world :: proc(w: ^World) {
 	w.round_number = 0
 	w.start_round_time = 0
 	w.grav_stabilty = -1 // 30
-    w.bober_arrives_time = w.now + 20
+	w.bober_arrives_time = w.now + 20
 	w.current_round_time = 0
 	rl.PlayMusicStream(w.assets.radio_music)
+	w.current_recipe = make_recipe(w)
+	w.count_rollos = 0
+	w.is_wrap_wrapped = false
+
 }
 
 deinit_world :: proc(w: ^World) {
@@ -135,26 +141,30 @@ update_world :: proc(w: ^World, dt: f32) {
 		rl.PlaySound(w.assets.ding_sound)
 		w.round_number += 1
 		w.start_round_time = w.now
+		w.count_rollos += 1
+        w.is_wrap_wrapped = false
 	}
-	if recipe_is_done(&w.current_recipe) {
+	if w.is_wrap_wrapped && w.count_rollos == 1{
 		w.come_to_window_time = w.now + 5
+		w.count_rollos = 0
 		w.slime_has_awakened = false
 		w.current_recipe = make_recipe(w)
-        if w.max_round_time > 6 {
-            w.max_round_time -= 0.5
-        }
+		if w.max_round_time > 6 {
+			w.max_round_time -= 0.5
+		}
 		w.score +=
 			f32(w.current_recipe.ingredients_count) *
 			math.max(0, (w.max_round_time - (w.now - w.start_round_time)))
 		w.start_round_time = w.now
+		w.is_wrap_wrapped = true
 	}
 	if w.round_number > 1 {
 		w.grav_stabilty -= dt
 	} else {
-        w.bober_arrives_time = w.now + 3
-    }
+		w.bober_arrives_time = w.now + 3
+	}
 	update_player_movement(&w.player, dt)
-    update_bober(w, dt)
+	update_bober(w, dt)
 	update_main_camera(w)
 	update_entity_targetting(w)
 	update_entity_interaction(w)

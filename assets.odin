@@ -26,6 +26,7 @@ Assets :: struct {
 	mayo_model:                 rl.Model,
 	shroom_model:               rl.Model,
 	tv_model:                   rl.Model,
+	rollo_model:                rl.Model,
 	shroombox_model:            rl.Model,
 	eye_model:                  rl.Model,
 	bowl_model:                 rl.Model,
@@ -137,6 +138,9 @@ init_assets :: proc(a: ^Assets) {
 	a.wrap_model = rl.LoadModel("res/models/wrap.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.wrap_model)
 
+	a.rollo_model = rl.LoadModel("res/models/rollo.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.rollo_model)
+
 	a.skycube_model = rl.LoadModel("res/models/cube.glb")
 	assign_shader_to_model(a.skycube_shader, &a.skycube_model)
 
@@ -182,6 +186,7 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadModel(a.bober_model)
 	rl.UnloadModel(a.tv_model)
 	rl.UnloadModel(a.wrap_model)
+	rl.UnloadModel(a.rollo_model)
 	rl.UnloadTexture(a.smoke_sprite)
 	rl.UnloadTexture(a.bell_sprite)
 	rl.UnloadTexture(a.timer_sprite)

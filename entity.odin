@@ -46,13 +46,19 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 	case .TENTACLE:
 		player_hold_item(&w.player, w, .SQUID_MEAT)
 	case .SLIME:
+		recipe_try_wrap_rollo(w, &w.current_recipe, w.player.held_item)
 	case .FRIDGE:
 		player_hold_item(&w.player, w, .UNICORN_BONES)
 	case .LIZARD_HAND:
 		player_hold_item(&w.player, w, .CHINESE_SCALE)
 	case .CONTRUCTION_SITE:
 		recipe_try_add_ingredient(w, &w.current_recipe, w.player.held_item)
-		player_hold_item(&w.player, w, .NONE)
+        if recipe_is_done(&w.current_recipe){
+            player_hold_item(&w.player, w, .ROLLO)
+        }
+        else{
+            player_hold_item(&w.player, w, .NONE)
+        }   
 	case .SHROOM_BOX:
 		player_hold_item(&w.player, w, .MUSHROOMS)
 	case .MAYO_JAR:
@@ -113,11 +119,11 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 		time_since_change := w.now - w.come_to_window_time
 		change_offset := (1 - math.min(1, (time_since_change / 0.2))) * -0.5
 		if w.round_number > 0 && !w.slime_has_awakened && w.now - w.start_round_time < 2 {
-			draw_puff(w, e.position + {0, 0, 1.5}, 2, .9001)
+			draw_puff(w, e.position + {0, 0, 0}, 2, .9001)
 		}
 		rl.DrawModelEx(
 			w.assets.slime_model,
-			e.position + {0, 0 + change_offset, 1.5 - change_offset},
+			e.position + {0, 0.2 + change_offset, -0.1 - change_offset},
 			{1, 0, 0},
 			0,
 			{1, 1, 1},
@@ -125,7 +131,7 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 		)
 		rl.DrawModel(
 			w.assets.plane_model,
-			e.position + {0.3, 0 + change_offset, 1.28 - change_offset},
+			e.position + {0.3, 0.2 + change_offset, -0.42 - change_offset},
 			1,
 			rl.WHITE,
 		)
@@ -195,7 +201,7 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 			rl.WHITE,
 		)
 	case .CONTRUCTION_SITE:
-		if w.slime_has_awakened {
+		if w.slime_has_awakened && !recipe_is_done(&w.current_recipe){
 			rl.DrawModelEx(
 				w.assets.wrap_model,
 				e.position + {0, -0.13, 0},
@@ -209,21 +215,22 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 		if w.round_number > 0 && w.now - w.start_round_time < 2 {
 			draw_puff(w, e.position, 2, .2324)
 		}
-
-		for it, ind in w.current_recipe.ingredients {
-			if !it.done {
-				continue
-			}
-			angle_off: rl.Vector3 =
-				{
-					math.cos_f32(f32(ind) * 2.0 * rl.PI / 7.0),
-					0,
-					math.sin_f32(f32(ind) * 2.0 * rl.PI / 7.0),
-				} *
-				0.1
-			item_model := item_get_model(w, it.item)
-			rl.DrawModelEx(item_model, e.position + angle_off, {0, 0, 1}, 0, {1, 1, 1}, rl.WHITE)
-		}
+        if !recipe_is_done(&w.current_recipe){
+            for it, ind in w.current_recipe.ingredients {
+                if !it.done {
+                    continue
+                }
+                angle_off: rl.Vector3 =
+                    {
+                        math.cos_f32(f32(ind) * 2.0 * rl.PI / 7.0),
+                        0,
+                        math.sin_f32(f32(ind) * 2.0 * rl.PI / 7.0),
+                    } *
+                    0.1
+                item_model := item_get_model(w, it.item)
+                rl.DrawModelEx(item_model, e.position + angle_off, {0, 0, 1}, 0, {1, 1, 1}, rl.WHITE)
+            }
+        }
 	case .GRAV_STABILIZER:
 		scale: f32 = 1
 		if w.grav_stabilty < 0 {
@@ -260,7 +267,7 @@ make_entity_tentacle :: proc() -> Entity {
 }
 
 make_entity_slime :: proc() -> Entity {
-	return Entity{kind = .SLIME, position = {0.7, 1, -0.35}, size = {0.2, 0.8, 0.2}}
+	return Entity{kind = .SLIME, position = {0.6, 0.8, 1.2}, size = {0.2, 0.8, 0.2}}
 }
 
 make_entity_fridge :: proc() -> Entity {
@@ -299,3 +306,4 @@ make_entity_grav_stabilizer :: proc() -> Entity {
 make_entity_bober :: proc() -> Entity {
 	return Entity{kind = .BOBER, position = {0, 5, 0}, size = {0.4, 0.4, 0.4}}
 }
+

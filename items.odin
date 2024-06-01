@@ -12,6 +12,7 @@ Item :: enum {
 	UNICORN_BONES,
 	MUSHROOMS,
 	VOID_MAYO,
+    ROLLO,
 }
 
 item_get_model :: proc(w: ^World, it: Item) -> rl.Model {
@@ -30,6 +31,8 @@ item_get_model :: proc(w: ^World, it: Item) -> rl.Model {
 		return w.assets.spoon_model
 	case .UNICORN_BONES:
 		return w.assets.unicorn_bones_model
+	case .ROLLO:
+		return w.assets.rollo_model
 	}
 	return {}
 }
@@ -49,6 +52,8 @@ item_get_name :: proc(it: Item) -> string {
 		return "Void Mayo"
 	case .UNICORN_BONES:
 		return "U-crn Bone"
+	case .ROLLO:
+		return "Rollo"
 	}
     return ""
 }

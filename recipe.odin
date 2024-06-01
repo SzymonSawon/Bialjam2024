@@ -19,7 +19,7 @@ Recipe :: struct {
 
 make_recipe :: proc(w: ^World) -> Recipe {
 	recipe := Recipe{}
-	recipe.ingredients_count = auto_cast rl.GetRandomValue(1, i32(math.ceil(f32(w.round_number)/2)))
+	recipe.ingredients_count = auto_cast rl.GetRandomValue(1, i32(math.ceil(f32(w.round_number+1)/2)))
 	for i := 0; i <= recipe.ingredients_count; i += 1 {
 		recipe.ingredients[i].item = (auto_cast rl.GetRandomValue(1, 6))
 	}
@@ -61,10 +61,21 @@ draw_recipe_layer :: proc(w: ^World) {
 recipe_try_add_ingredient :: proc(w: ^World, r: ^Recipe, it: Item) {
     for &i in r.ingredients[0:r.ingredients_count] {
         if i.item == it && !i.done {
-            i.done = true 
+            i.done = true
             rl.PlaySound(w.assets.good_ingredient_sound)
             return
         }
+    }
+    rl.PlaySound(w.assets.bad_ingredient_sound)
+}
+
+
+recipe_try_wrap_rollo :: proc(w: ^World, r: ^Recipe, it: Item) {
+    if it == Item.ROLLO && w.count_rollos == 1{
+        rl.PlaySound(w.assets.good_ingredient_sound)
+        w.player.held_item = nil
+        w.is_wrap_wrapped = true
+        return
     }
     rl.PlaySound(w.assets.bad_ingredient_sound)
 }
