@@ -33,8 +33,8 @@ intro_scene :: proc(w: ^World, dt: f32) {
     } else if w.intro_timer < 10 {
         {
             message: cstring = "WARNING!!!"
-            width := rl.MeasureText(message, 30)
-            rl.DrawText(message, auto_cast screen_size.x / 2 - width / 2, auto_cast screen_size.y / 2 - 15, 30, rl.BLACK)
+            width := rl.MeasureText(message, 40)
+            rl.DrawText(message, auto_cast screen_size.x / 2 - width / 2, auto_cast screen_size.y / 2 - 30, 40, rl.RED)
         }
         {
             message: cstring = "This game contains heavily flashing images.\nBefore playing be sure to consult your doctor."

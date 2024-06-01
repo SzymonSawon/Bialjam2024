@@ -43,7 +43,7 @@ World :: struct {
 
 init_world :: proc(w: ^World) {
 	w.now = 0
-	w.intro_timer = 3
+	w.intro_timer = 0
     w.paused = false
 	w.should_quit = false
 
