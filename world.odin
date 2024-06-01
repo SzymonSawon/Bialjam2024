@@ -115,21 +115,20 @@ init_world :: proc(w: ^World) {
 
 	w.slime_has_awakened = false
 	w.max_round_time = 15
-	w.current_recipe = make_recipe(w)
+	w.current_recipe = make_start_recipe(w)
 	w.come_to_window_time = w.now + 5
 	w.last_screen_size = {0, 0}
 	w.score = 0
 	w.round_number = 0
 	w.start_round_time = 0
 	w.grav_stabilty = -1 // 30
-	w.matter_stability = -1 // 20
+	w.matter_stability = 20
     w.bober_arrives_time = w.now + 20
 	w.current_round_time = 0
-	rl.PlayMusicStream(w.assets.radio_music)
-	w.current_recipe = make_recipe(w)
 	w.count_rollos = 0
 	w.is_wrap_wrapped = false
 
+	rl.PlayMusicStream(w.assets.radio_music)
 }
 
 deinit_world :: proc(w: ^World) {
