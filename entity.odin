@@ -15,6 +15,7 @@ EntityKind :: enum {
 	MAYO_JAR,
 	EYE_BOWL,
 	GRAV_STABILIZER,
+	MATTER_STABILIZER,
     TV,
 	BOBER,
 }
@@ -66,10 +67,9 @@ entity_interact :: proc(w: ^World, e: ^Entity) {
 	case .EYE_BOWL:
 		player_hold_item(&w.player, w, .EYE_OF_CTHULU)
 	case .GRAV_STABILIZER:
-        w.grav_stabilty = 30
-        if w.grav_stabilty > 8 {
-            w.grav_stabilty = 30.0 - f32(w.round_number)
-        }
+        w.grav_stabilty = math.min(30.0 - f32(w.round_number), 12)
+	case .MATTER_STABILIZER:
+        w.matter_stability = math.min(40.0 - f32(w.round_number), 20)
 	case .TV:
 		w.grav_stabilty = 30
 	case .BOBER:
@@ -244,6 +244,19 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 			{1, 1, 1} * scale,
 			rl.WHITE,
 		)
+	case .MATTER_STABILIZER:
+		scale: f32 = 1
+		if w.matter_stability < 0 {
+			scale = math.pow(math.sin(w.now * 3), 2) * 1 + 1
+		}
+		rl.DrawModelEx(
+			w.assets.button_model,
+			e.position + {0, 0, 0},
+			{1, 0, 0},
+			90,
+			{1, 1, 1} * scale,
+			rl.WHITE,
+		)
 	case .BOBER:
         v := w.player.position - e.position
         a := math.atan2(v.x, v.z)
@@ -301,6 +314,10 @@ make_entity_tv :: proc() -> Entity {
 
 make_entity_grav_stabilizer :: proc() -> Entity {
 	return Entity{kind = .GRAV_STABILIZER, position = {-0.7, 0.8, -0.65}, size = {0.2, 0.2, 0.1}}
+}
+
+make_entity_matter_stabilizer :: proc() -> Entity {
+	return Entity{kind = .MATTER_STABILIZER, position = {0.3, 0.8, -0.65}, size = {0.2, 0.2, 0.1}}
 }
 
 make_entity_bober :: proc() -> Entity {

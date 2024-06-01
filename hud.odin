@@ -113,14 +113,14 @@ draw_3d_hud :: proc(w: ^World, dt: f32) {
 			rl.DrawText(
 				message,
 				cast(i32)screen_size.x / 2 - text_width / 2 + 1,
-				cast(i32)screen_size.y / 2 - 50 + 1,
+				cast(i32)screen_size.y / 2 - 70 + 1,
 				30,
 				rl.BLACK,
 			)
 			rl.DrawText(
 				message,
 				cast(i32)screen_size.x / 2 - text_width / 2,
-				cast(i32)screen_size.y / 2 - 50,
+				cast(i32)screen_size.y / 2 - 70,
 				30,
 				rl.RED,
 			)
@@ -131,16 +131,54 @@ draw_3d_hud :: proc(w: ^World, dt: f32) {
 			rl.DrawText(
 				message,
 				cast(i32)screen_size.x / 2 - text_width / 2 + 1,
-				cast(i32)screen_size.y / 2 + 1,
+				cast(i32)screen_size.y / 2 - 20 + 1,
 				10,
 				rl.BLACK,
 			)
 			rl.DrawText(
 				message,
 				cast(i32)screen_size.x / 2 - text_width / 2,
-				cast(i32)screen_size.y / 2,
+				cast(i32)screen_size.y / 2 - 20,
 				10,
 				rl.RED,
+			)
+		}
+	}
+	if w.matter_stability < 0 {
+		{
+            message : cstring = "!!! Matter stability fail !!!"
+			text_width := rl.MeasureText(message, 30)
+			rl.DrawText(
+				message,
+				cast(i32)screen_size.x / 2 - text_width / 2 + 1,
+				cast(i32)screen_size.y / 2 + 30 + 1,
+				30,
+				rl.BLACK,
+			)
+			rl.DrawText(
+				message,
+				cast(i32)screen_size.x / 2 - text_width / 2,
+				cast(i32)screen_size.y / 2 + 30,
+				30,
+				rl.GREEN,
+			)
+		}
+		{
+            message:= rl.TextFormat("You have %d seconds to react", cast(i32)(w.matter_stability + 10))
+			text_width := rl.MeasureText(message, 10)
+			rl.DrawText(
+				message,
+				cast(i32)screen_size.x / 2 - text_width / 2 + 1,
+				cast(i32)screen_size.y / 2 + 70 + 1,
+				10,
+				rl.BLACK,
+			)
+			rl.DrawText(
+				message,
+				cast(i32)screen_size.x / 2 - text_width / 2,
+				cast(i32)screen_size.y / 2 + 70,
+				10,
+				rl.GREEN,
 			)
 		}
 	}

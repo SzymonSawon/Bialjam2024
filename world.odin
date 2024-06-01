@@ -38,6 +38,7 @@ World :: struct {
 	sk:                  SceneKind,
 	should_quit:         bool,
 	grav_stabilty:       f32,
+	matter_stability:     f32,
 	bober_arrives_time:  f32,
 	is_wrap_wrapped:     bool,
 	count_rollos:        int,
@@ -102,6 +103,7 @@ init_world :: proc(w: ^World) {
 	append(&w.entities, make_entity_eye_bowl())
 	append(&w.entities, make_entity_construction_site())
 	append(&w.entities, make_entity_grav_stabilizer())
+	append(&w.entities, make_entity_matter_stabilizer())
 	append(&w.entities, make_entity_bober())
 
 	when ODIN_DEBUG {
@@ -120,7 +122,8 @@ init_world :: proc(w: ^World) {
 	w.round_number = 0
 	w.start_round_time = 0
 	w.grav_stabilty = -1 // 30
-	w.bober_arrives_time = w.now + 20
+	w.matter_stability = 20
+    w.bober_arrives_time = w.now + 20
 	w.current_round_time = 0
 	rl.PlayMusicStream(w.assets.radio_music)
 	w.current_recipe = make_recipe(w)
@@ -147,7 +150,7 @@ update_world :: proc(w: ^World, dt: f32) {
     }
 	w.now += dt
 	if w.round_number > 1 &&
-	   (w.now - w.start_round_time >= w.max_round_time || w.grav_stabilty < -6) {
+	   (w.now - w.start_round_time >= w.max_round_time || w.grav_stabilty < -6 || w.grav_stabilty < -10) {
 		world_set_scene(w, .GAME_OVER)
 	}
 	if w.come_to_window_time <= w.now && !w.slime_has_awakened {
@@ -174,6 +177,7 @@ update_world :: proc(w: ^World, dt: f32) {
 	}
 	if w.round_number > 1 {
 		w.grav_stabilty -= dt
+		w.matter_stability -= dt
 	} else {
 		w.bober_arrives_time = w.now + 3
 	}
@@ -219,6 +223,18 @@ update_shaders :: proc(w: ^World) {
 			w.assets.postprocess_shader,
 			rl.GetShaderLocation(w.assets.postprocess_shader, "shakiness"),
 			&shakiness,
+			.FLOAT,
+		)
+	}
+	{
+		invertness: f32 = 0
+		if w.matter_stability < 0 {
+			invertness = 1
+		}
+		rl.SetShaderValue(
+			w.assets.postprocess_shader,
+			rl.GetShaderLocation(w.assets.postprocess_shader, "invertness"),
+			&invertness,
 			.FLOAT,
 		)
 	}
@@ -325,6 +341,15 @@ world_set_scene :: proc(w: ^World, sk: SceneKind) {
 	} else {
 		rl.EnableCursor()
 	}
+    if sk == .MENU {
+		w.main_camera = rl.Camera3D {
+			up         = {0, 1, 0},
+			position   = {2, 4, 6},
+			target     = {-0.2, -.2, -1},
+			fovy       = 80,
+			projection = .PERSPECTIVE,
+		}
+    }
 }
 
 world_reload :: proc(w: ^World) {

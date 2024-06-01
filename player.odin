@@ -20,8 +20,8 @@ Player :: struct {
 
 init_player :: proc(p: ^Player) {
 	p.position = {-0.8, 0, 0}
-	p.yaw = 0
-	p.pitch = rl.PI / 2
+	p.yaw = -rl.PI / 2 + 0.1
+	p.pitch = rl.PI / 2 + 0.25
 	p.held_item = .NONE
 }
 

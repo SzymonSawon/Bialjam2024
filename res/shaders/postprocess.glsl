@@ -9,6 +9,7 @@ uniform sampler2D texture0;
 uniform vec2 resolution;
 
 uniform float shakiness = 0;
+uniform float invertness = 0;
 uniform float time = 0;
 
 const int indexMatrix4x4[16] = int[](
@@ -37,4 +38,7 @@ void main()
     float distance = length(closestColor - finalColor);
     finalColor = (distance < d) ? closestColor : secondClosestColor;
     finalColor /= 20;
+
+    vec4 inverted = vec4(1 - finalColor.xyz, finalColor.w);
+    finalColor = mix(finalColor, inverted, invertness);
 }
