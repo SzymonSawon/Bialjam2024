@@ -143,6 +143,9 @@ init_assets :: proc(a: ^Assets) {
 	assign_shader_to_model(a.generic_diffuse_shader, &a.wrap_model)
 
 	a.rollo_model = rl.LoadModel("res/models/rollo.glb")
+	a.rollo_model.transform = 
+        rl.MatrixScale(2, 2, 2) *
+        rl.MatrixTranslate(0,0.05,0)
 	assign_shader_to_model(a.generic_diffuse_shader, &a.rollo_model)
 
 	a.skycube_model = rl.LoadModel("res/models/cube.glb")
