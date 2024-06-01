@@ -267,7 +267,7 @@ make_entity_tentacle :: proc() -> Entity {
 }
 
 make_entity_slime :: proc() -> Entity {
-	return Entity{kind = .SLIME, position = {0.6, 0.8, 1.2}, size = {0.2, 0.8, 0.2}}
+	return Entity{kind = .SLIME, position = {0.6, 0.8, 1.2}, size = {0.7, 0.8, 0.2}}
 }
 
 make_entity_fridge :: proc() -> Entity {
