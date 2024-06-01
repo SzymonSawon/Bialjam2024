@@ -34,6 +34,8 @@ Assets :: struct {
 	skycube_model:              rl.Model,
 	button_model:               rl.Model,
 	bober_model:                rl.Model,
+	board_model:                rl.Model,
+	lever_model:                rl.Model,
 	radio_music:                rl.Music,
 	smoke_sprite:               rl.Texture,
 	bell_sprite:                rl.Texture,
@@ -152,6 +154,12 @@ init_assets :: proc(a: ^Assets) {
 	a.bober_model = rl.LoadModel("res/models/bober.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.bober_model)
 
+	a.board_model = rl.LoadModel("res/models/board.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.board_model)
+
+	a.lever_model = rl.LoadModel("res/models/lever.glb")
+	assign_shader_to_model(a.generic_diffuse_shader, &a.lever_model)
+
 	a.tv_model = rl.LoadModel("res/models/tv.glb")
 	assign_shader_to_model(a.generic_diffuse_shader, &a.tv_model)
 
@@ -193,6 +201,8 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadModel(a.tv_model)
 	rl.UnloadModel(a.wrap_model)
 	rl.UnloadModel(a.rollo_model)
+	rl.UnloadModel(a.board_model)
+	rl.UnloadModel(a.lever_model)
 	rl.UnloadTexture(a.smoke_sprite)
 	rl.UnloadTexture(a.bell_sprite)
 	rl.UnloadTexture(a.timer_sprite)

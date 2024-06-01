@@ -246,14 +246,16 @@ draw_entity :: proc(w: ^World, e: ^Entity) {
 		)
 	case .MATTER_STABILIZER:
 		scale: f32 = 1
+        rot: f32 = 90
 		if w.matter_stability < 0 {
-			scale = math.pow(math.sin(w.now * 3), 2) * 1 + 1
+            rot = -20
+            scale = math.pow(math.sin(w.now * 3), 2) * 0.5 + 1
 		}
 		rl.DrawModelEx(
-			w.assets.button_model,
-			e.position + {0, 0, 0},
+			w.assets.lever_model,
+			e.position + {0.1, 0, 0},
 			{1, 0, 0},
-			90,
+			rot,
 			{1, 1, 1} * scale,
 			rl.WHITE,
 		)
@@ -280,7 +282,7 @@ make_entity_tentacle :: proc() -> Entity {
 }
 
 make_entity_slime :: proc() -> Entity {
-	return Entity{kind = .SLIME, position = {0.6, 0.8, 1.2}, size = {0.7, 0.8, 0.2}}
+	return Entity{kind = .SLIME, position = {0.6, 0.8, 1.2}, size = {0.7, 0.8, 0.5}}
 }
 
 make_entity_fridge :: proc() -> Entity {
@@ -313,11 +315,11 @@ make_entity_tv :: proc() -> Entity {
 }
 
 make_entity_grav_stabilizer :: proc() -> Entity {
-	return Entity{kind = .GRAV_STABILIZER, position = {-0.7, 0.8, -0.65}, size = {0.2, 0.2, 0.1}}
+	return Entity{kind = .GRAV_STABILIZER, position = {-0.6, 0.8, -0.65}, size = {0.2, 0.2, 0.1}}
 }
 
 make_entity_matter_stabilizer :: proc() -> Entity {
-	return Entity{kind = .MATTER_STABILIZER, position = {0.3, 0.8, -0.65}, size = {0.2, 0.2, 0.1}}
+	return Entity{kind = .MATTER_STABILIZER, position = {-0.1, 0.8, -0.65}, size = {0.3, 0.2, 0.1}}
 }
 
 make_entity_bober :: proc() -> Entity {

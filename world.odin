@@ -122,7 +122,7 @@ init_world :: proc(w: ^World) {
 	w.round_number = 0
 	w.start_round_time = 0
 	w.grav_stabilty = -1 // 30
-	w.matter_stability = 20
+	w.matter_stability = -1 // 20
     w.bober_arrives_time = w.now + 20
 	w.current_round_time = 0
 	rl.PlayMusicStream(w.assets.radio_music)
@@ -269,6 +269,7 @@ draw_world :: proc(w: ^World, dt: f32) {
 
 	rl.DrawModel(w.assets.foodtruck_model, {0, 0, 0}, 1, rl.WHITE)
 	rl.DrawModel(w.assets.świetlówka_model, {0, 1.25, 0}, 0.3, rl.WHITE)
+	rl.DrawModel(w.assets.board_model, {-.3, 0.9, -0.71}, 1, rl.WHITE)
 	rl.DrawModel(w.assets.skycube_model, {0, 0, 0}, 30, rl.WHITE)
 
 	for &e in w.entities {
