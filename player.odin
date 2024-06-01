@@ -40,7 +40,7 @@ player_hold_item :: proc(p: ^Player, w: ^World, it: Item) {
 
 update_player_movement :: proc(p: ^Player, dt: f32) {
 	rotation := rl.GetMouseDelta()
-	rotation *= 0.01
+	rotation *= 0.005
 	p.pitch += rotation.y
 	p.pitch = math.clamp(p.pitch, 0.1, rl.PI - 0.1)
 	p.yaw += rotation.x
