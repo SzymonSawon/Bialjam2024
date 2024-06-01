@@ -144,6 +144,11 @@ update_world :: proc(w: ^World, dt: f32) {
 	update_music(w)
     if rl.IsKeyPressed(.ESCAPE) {
         w.paused = !w.paused
+        if w.paused {
+            rl.EnableCursor()
+        } else {
+            rl.DisableCursor()
+        }
     }
     if w.paused {
         return
