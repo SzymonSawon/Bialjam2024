@@ -5,7 +5,7 @@ import "core:math"
 import rl "vendor:raylib"
 
 SceneKind :: enum {
-    INTRO,
+	INTRO,
 	MENU,
 	GAMEPLAY,
 	GAME_OVER,
@@ -13,8 +13,8 @@ SceneKind :: enum {
 
 World :: struct {
 	now:                 f32,
-    intro_timer:         f32,
-    paused:              bool,
+	intro_timer:         f32,
+	paused:              bool,
 	assets:              Assets,
 	main_camera:         rl.Camera3D,
 	hud_camera:          rl.Camera3D,
@@ -38,16 +38,18 @@ World :: struct {
 	sk:                  SceneKind,
 	should_quit:         bool,
 	grav_stabilty:       f32,
-	matter_stability:     f32,
+	matter_stability:    f32,
 	bober_arrives_time:  f32,
 	is_wrap_wrapped:     bool,
 	count_rollos:        int,
+	is_any_ingredient:   bool,
+    count_ingredients: int,
 }
 
 init_world :: proc(w: ^World) {
 	w.now = 0
 	w.intro_timer = 0
-    w.paused = false
+	w.paused = false
 	w.should_quit = false
 
 	init_assets(&w.assets)
@@ -123,12 +125,13 @@ init_world :: proc(w: ^World) {
 	w.start_round_time = 0
 	w.grav_stabilty = -1 // 30
 	w.matter_stability = 20
-    w.bober_arrives_time = w.now + 20
+	w.bober_arrives_time = w.now + 20
 	w.current_round_time = 0
 	w.count_rollos = 0
 	w.is_wrap_wrapped = false
 
 	rl.PlayMusicStream(w.assets.radio_music)
+    w.is_any_ingredient = false
 }
 
 deinit_world :: proc(w: ^World) {
@@ -141,31 +144,55 @@ deinit_world :: proc(w: ^World) {
 
 update_world :: proc(w: ^World, dt: f32) {
 	update_music(w)
-    if rl.IsKeyPressed(.ESCAPE) {
-        w.paused = !w.paused
-        if w.paused {
-            rl.EnableCursor()
-        } else {
-            rl.DisableCursor()
-        }
-    }
-    if w.paused {
-        return
-    }
+	if rl.IsKeyPressed(.ESCAPE) {
+		w.paused = !w.paused
+		if w.paused {
+			rl.EnableCursor()
+		} else {
+			rl.DisableCursor()
+		}
+	}
+	if w.paused {
+		return
+	}
 	w.now += dt
 	if w.round_number > 1 &&
-	   (w.now - w.start_round_time >= w.max_round_time || w.grav_stabilty < -6 || w.grav_stabilty < -10) {
+	   (       w.grav_stabilty < -6 ||
+			   w.grav_stabilty < -10) {
 		world_set_scene(w, .GAME_OVER)
-	}
+       }
+    if w.round_number > 1 &&
+	   (w.now - w.start_round_time >= w.max_round_time){
+        w.is_any_ingredient = false
+        for &i in w.current_recipe.ingredients[0:w.current_recipe.ingredients_count] {
+            if i.done {
+                w.is_any_ingredient = true
+                w.count_ingredients += 1
+            }
+        }
+        if w.is_any_ingredient == false{
+            world_set_scene(w, .GAME_OVER)
+            return
+        }
+        else{
+            w.is_wrap_wrapped = true
+            w.count_rollos = 1
+            w.score -= (f32(w.current_recipe.ingredients_count) - f32(w.count_ingredients)) * 3
+            w.count_ingredients = 0
+            w.player.held_item = nil
+        }
+        
+    }
 	if w.come_to_window_time <= w.now && !w.slime_has_awakened {
 		w.slime_has_awakened = true
 		rl.PlaySound(w.assets.ding_sound)
 		w.round_number += 1
 		w.start_round_time = w.now
 		w.count_rollos += 1
-        w.is_wrap_wrapped = false
+		w.is_wrap_wrapped = false
 	}
-	if w.is_wrap_wrapped && w.count_rollos == 1{
+	if w.is_wrap_wrapped && w.count_rollos == 1 {
+        w.is_any_ingredient = false
 		w.come_to_window_time = w.now + 5
 		w.count_rollos = 0
 		w.slime_has_awakened = false
@@ -346,7 +373,7 @@ world_set_scene :: proc(w: ^World, sk: SceneKind) {
 	} else {
 		rl.EnableCursor()
 	}
-    if sk == .MENU {
+	if sk == .MENU {
 		w.main_camera = rl.Camera3D {
 			up         = {0, 1, 0},
 			position   = {2, 4, 6},
@@ -354,11 +381,11 @@ world_set_scene :: proc(w: ^World, sk: SceneKind) {
 			fovy       = 80,
 			projection = .PERSPECTIVE,
 		}
-    }
+	}
 }
 
 world_reload :: proc(w: ^World) {
 	deinit_world(w)
 	init_world(w)
-    rl.EnableCursor();
+	rl.EnableCursor()
 }
