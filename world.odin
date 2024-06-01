@@ -5,13 +5,15 @@ import "core:math"
 import rl "vendor:raylib"
 
 SceneKind :: enum {
-	GAME_OVER,
+    INTRO,
 	MENU,
 	GAMEPLAY,
+	GAME_OVER,
 }
 
 World :: struct {
 	now:                 f32,
+    intro_timer:         f32,
     paused:              bool,
 	assets:              Assets,
 	main_camera:         rl.Camera3D,
@@ -41,6 +43,7 @@ World :: struct {
 
 init_world :: proc(w: ^World) {
 	w.now = 0
+	w.intro_timer = 3
     w.paused = false
 	w.should_quit = false
 
@@ -50,10 +53,10 @@ init_world :: proc(w: ^World) {
 		w.sk = .GAMEPLAY
 		rl.DisableCursor()
 	} else {
-		w.sk = .MENU
+		w.sk = .INTRO
 	}
 
-	#partial switch w.sk {
+	switch w.sk {
 	case .GAME_OVER:
 		fallthrough
 	case .GAMEPLAY:
@@ -64,6 +67,8 @@ init_world :: proc(w: ^World) {
 			fovy       = 80,
 			projection = .PERSPECTIVE,
 		}
+	case .INTRO:
+		fallthrough
 	case .MENU:
 		w.main_camera = rl.Camera3D {
 			up         = {0, 1, 0},

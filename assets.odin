@@ -43,6 +43,8 @@ Assets :: struct {
 	ding_sound:                 rl.Sound,
 	bober_laugh_sound:          rl.Sound,
 	bober_catch_sound:          rl.Sound,
+	odin_logo:                  rl.Texture,
+	raylib_logo:                rl.Texture,
 }
 
 assign_shader_to_model :: proc(s: rl.Shader, m: ^rl.Model) {
@@ -156,6 +158,10 @@ init_assets :: proc(a: ^Assets) {
 	a.timer_sprite = rl.LoadTexture("res/sprites/timer.png")
 
 	a.lmb_sprite = rl.LoadTexture("res/sprites/lmb.png")
+
+	a.raylib_logo = rl.LoadTexture("res/intro/raylib_logo.png")
+
+	a.odin_logo = rl.LoadTexture("res/intro/odin-logo-slim.png")
 }
 
 deinit_assets :: proc(a: ^Assets) {
@@ -192,4 +198,6 @@ deinit_assets :: proc(a: ^Assets) {
 	rl.UnloadSound(a.ding_sound)
 	rl.UnloadSound(a.bober_laugh_sound)
 	rl.UnloadSound(a.bober_catch_sound)
+	rl.UnloadTexture(a.raylib_logo)
+	rl.UnloadTexture(a.odin_logo)
 }

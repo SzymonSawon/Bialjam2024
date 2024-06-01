@@ -76,6 +76,8 @@ main :: proc() {
                 defer rl.EndShaderMode()
                 rl.DrawTextureEx(world.hud_layer.texture, {0, 0}, 0, PIXELIZE, rl.WHITE)
             }
+        case .INTRO:
+			intro_scene(&world, dt)
         case .MENU:
 			menu_scene(&world)
         case .GAME_OVER:
